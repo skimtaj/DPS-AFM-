@@ -144,6 +144,8 @@ const adminDashboard = async (req, res) => {
     const allEnquiry = await enquiry_model.find();
     const memberSourse = await member_model.find();
     const totalMember = memberSourse.length;
+        const totalpendingEnquiry = allEnquiry.filter((e) => e.Status === 'Pending').length;
+
 
 
     const donationSourse = await donation_model.find();
@@ -153,11 +155,10 @@ const adminDashboard = async (req, res) => {
         return isNaN(amount) ? total : total + amount;
     }, 0);
 
-    console.log(totalDonation);
 
     const allRefund = await refund_model.find();
 
-    res.render('../Views/admin_dashboard', { totalDonation, totalMember, adminSourse, allEnquiry, allRefund })
+    res.render('../Views/admin_dashboard', {totalpendingEnquiry,  totalDonation, totalMember, adminSourse, allEnquiry, allRefund })
 
 }
 
