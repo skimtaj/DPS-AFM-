@@ -175,51 +175,50 @@ const reqplyEnquiry = async (req, res) => {
 
 }
 
+
 const reqplyEnquiryPost = async (req, res) => {
 
+
     const replyEnquiry = req.body;
-    const enquiryEmail = await enquiry_model.findOne({ Email: replyEnquiry.Email })
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.User,
+            pass: process.env.Pass
+        }
+    });
+
+    var mailOptions = {
+        from: process.env.User,
+        to: replyEnquiry.Email,
+        subject: 'Reply Message',
+        text: `According to your query, Response is here : ${replyEnquiry.Reply}`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
 
 
-    if (enquiryEmail) {
+    const enquirySourse = await enquiry_model.findById(req.params.id)
+
+    enquirySourse.Status = 'Replied'
+    await enquirySourse.save();
 
 
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.User,
-                pass: process.env.Pass
-            }
-        });
-
-        var mailOptions = {
-            from: process.env.User,
-            to: enquiryEmail.Email,
-            subject: 'Reply Message',
-            text: `According to your query, Response is here \n ${enquiryEmail.Reply}`
-        };
-
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-
-
-        enquiryEmail.Status = 'Replied'
-        await enquiryEmail.save();
-
-
-        req.flash('success', 'Reply submitted Successfully');
-        return res.redirect('/DPS/admin-dashboard')
-
-
-    }
+    req.flash('success', 'Reply submitted Successfully');
+    return res.redirect('/DPS/admin-dashboard')
 
 
 }
+
+
+    
 
 const allMember = async (req, res) => {
 
