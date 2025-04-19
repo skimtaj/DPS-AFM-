@@ -22,8 +22,8 @@
             --text-color: #333333;
             --gold-color: #D4AF37;
             --blue-color: #1E90FF;
-            --header-color: #2C3E50; /* Professional dark blue */
-            --footer-color: #34495E; /* Slightly lighter dark blue */
+            --header-color: #2C3E50;
+            --footer-color: #34495E;
         }
 
         body {
@@ -31,6 +31,7 @@
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
+            padding-top: 70px; /* Added for fixed navbar */
         }
 
         /* Professional Header */
@@ -45,7 +46,6 @@
         .navbar.scrolled {
             padding: 8px 0;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            background: var(--header-color);
         }
 
         .navbar-brand {
@@ -73,11 +73,14 @@
             height: 50px;
             margin-right: 12px;
             transition: all 0.3s;
-            filter: brightness(0) invert(1);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold-color);
         }
 
         .navbar-brand:hover img {
             transform: rotate(5deg) scale(1.05);
+            border-color: white;
         }
 
         .nav-link {
@@ -90,19 +93,12 @@
             border-radius: 8px;
         }
 
-        /* Remove underline effect */
-        .nav-link:before {
-            display: none;
-        }
-
-        /* Active menu item style */
         .nav-item .nav-link.active {
             background-color: rgba(255, 255, 255, 0.15);
             font-weight: 600;
         }
 
         .nav-link:hover {
-            color: white !important;
             background-color: rgba(255, 255, 255, 0.1);
         }
 
@@ -149,7 +145,7 @@
                 url('https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
             background-size: cover;
             color: white;
-            padding: 150px 0 100px;
+            padding: 100px 0;
             position: relative;
             overflow: hidden;
         }
@@ -260,7 +256,7 @@
 
         @media (max-width: 768px) {
             .hero-section {
-                padding: 120px 0 80px;
+                padding: 80px 0;
                 text-align: center;
             }
 
@@ -289,6 +285,11 @@
         @media (max-width: 576px) {
             .navbar-brand {
                 font-size: 1.1rem;
+            }
+            
+            .navbar-brand img {
+                width: 40px;
+                height: 40px;
             }
 
             .hero-title {
@@ -341,7 +342,10 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <span class="dps-highlight">DPS</span>  (AFM)
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjsd1SDSmUoIvOcJfXU8IeUALC34W_xH2t68cT7lTELTQhfOCxqkaldKWDinnBixngqxvhnMbc8qCxxh-na_F1pM5e-FFYA5R3CyJ5m573DnjxFGaPjSxfiMbeuR4tSkBPJ8C28f4nqzPXVUTp1uyS2SWLpwK_-GMaL48UiNA8-QyRUHMZfwjC5DQx-FtTc/w640-h640/images%20(7).jpg" 
+                     alt="DPS Logo" 
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/50x50.png?text=DPS+Logo';">
+                <span class="dps-highlight">DPS</span> (AFM)
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -416,7 +420,7 @@
     <footer class="footer">
         <div class="container">
             <div class="copyright">
-                <p>&copy; 2023 <a href="#">DPS </a>. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+                <p>&copy; 2023 <a href="#">DPS</a>. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
             </div>
         </div>
     </footer>
