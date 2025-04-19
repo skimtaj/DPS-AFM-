@@ -2,8 +2,6 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const bcryptjs = require('bcryptjs');
 const JWT = require('jsonwebtoken');
-
-
 const adminSchema = mongoose.Schema({
 
     Name: {
@@ -11,7 +9,7 @@ const adminSchema = mongoose.Schema({
         type: String
     },
 
-    Mpbile: {
+    Mobile: {
 
         type: String
     },
@@ -39,69 +37,17 @@ const adminSchema = mongoose.Schema({
         }
     }],
 
-    Teacher: [{
 
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'teacher_model'
-    }],
+    isVerified: {
 
-
-    Section: [{
-
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'section_model'
-    }],
-
-    Course: [{
-
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "class_model"
-    }],
-
-    Subjects: [{
-
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'subject_model'
-    }],
-
-    Academic_Year: [{
-
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'academic_year_model'
-    }],
-
-    Fees_Type: [{
-
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'fees_type_model'
-    }],
-
-    Students: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'student_model'
-    }]
-
-})
-
-adminSchema.methods.generateAdminToken = async function () {
-
-    try {
-
-        const token = JWT.sign({ _id: this._id.toString() }, process.env.Admin_Token_Password, { expiresIn: '365d' });
-        this.Token = this.Token.concat({ token: token });
-        this.save();
-        return token;
-
+        type: String,
+        defauld: 'Not Verified'
     }
 
-    catch (err) {
 
-        console.log('This is Admin Token generating error', err)
 
-    }
 
-}
-
+});
 
 adminSchema.pre('save', async function (next) {
     if (this.isModified('Password')) {
@@ -110,6 +56,22 @@ adminSchema.pre('save', async function (next) {
     next();
 });
 
+
+adminSchema.methods.generateJWT = async function () {
+
+    try {
+
+        const token = JWT.sign({ _id: this._id.toString() }, process.env.Admin_Token_Password, { expiresIn: '365d' });
+        this.Token = this.Token.concat({ token: token });
+        await this.save();
+        return token;
+    }
+
+    catch (err) {
+
+        console.log('This is Admin token generating error', err)
+    }
+}
 
 const admin_model = mongoose.model('admin_model', adminSchema);
 module.exports = admin_model; 

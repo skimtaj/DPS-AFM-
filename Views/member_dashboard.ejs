@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<%-include('member_common_header' , {member : memberSourse})%>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Admin Dashboard | Analytics Console</title>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+
+            :root {
+                --primaryColor: #38338a;
+                --primaryLight: #6366F1;
+                --primaryLighter: #818CF8;
+                --primaryDark: #4338CA;
+                --secondaryColor: #10B981;
+                --dangerColor: #EF4444;
+                --warningColor: #F59E0B;
+                --infoColor: #3B82F6;
+                --whiteColor: #FFFFFF;
+                --lightGray: #F9FAFB;
+                --mediumGray: #E5E7EB;
+                --darkGray: #6B7280;
+                --textColor: #111827;
+                --borderColor: #D1D5DB;
+                --smallBorder: 8px;
+                --mediumBorder: 12px;
+                --bigBorder: 16px;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --fs13: 0.8125rem;
+                --fs14: 0.875rem;
+                --fs15: 0.9375rem;
+                --fs16: 1rem;
+                --fs18: 1.125rem;
+                --fs20: 1.25rem;
+                --fs24: 1.5rem;
+                --fs30: 1.875rem;
+                --fs36: 2.25rem;
+                --sidebarWidth: 280px;
+                --headerHeight: 70px;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                position: relative;
+                color: var(--textColor);
+                background-color: var(--lightGray);
+                min-height: 100vh;
+                overflow-x: hidden;
+                line-height: 1.5;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                line-height: 1.3;
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+
+            .container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                padding: 1.5rem;
+            }
+
+            /* Main Content Grid */
+            .main {
+                display: grid;
+                gap: 1.5rem;
+                width: 100%;
+            }
+
+            .main .box {
+                padding: 1.5rem;
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .box-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .box-title {
+                font-size: var(--fs18);
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .box-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .box-action-btn {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--smallBorder);
+                background-color: var(--lightGray);
+                color: var(--darkGray);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                font-size: var(--fs14);
+            }
+
+            .box-action-btn:hover {
+                background-color: var(--mediumGray);
+                color: var(--textColor);
+            }
+
+            /* Welcome Box */
+            .welcome-box {
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                background: linear-gradient(135deg, var(--primaryColor) 0%, var(--primaryLight) 100%);
+                color: var(--whiteColor);
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .welcome-box::before {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 200px;
+                height: 200px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                z-index: 1;
+            }
+
+            .welcome-box::after {
+                content: '';
+                position: absolute;
+                bottom: -80px;
+                right: -80px;
+                width: 250px;
+                height: 250px;
+                background-color: rgba(255, 255, 255, 0.05);
+                border-radius: 50%;
+                z-index: 1;
+            }
+
+            .welcome-box .box-title {
+                color: var(--whiteColor);
+                font-size: var(--fs17);
+                margin-bottom: 0.5rem;
+                margin-bottom: 20PX;
+
+            }
+
+            .welcome-box .box-text {
+                font-size: var(--fs16);
+                margin-bottom: 1.5rem;
+                line-height: 1.6;
+                opacity: 0.9;
+                max-width: 600px;
+            }
+
+            .welcome-box .box-btn {
+                text-transform: capitalize;
+                font-size: var(--fs14);
+                font-weight: 500;
+                color: var(--primaryColor);
+                background-color: var(--whiteColor);
+                border-radius: var(--smallBorder);
+                padding: 0.625rem 1.5rem;
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                box-shadow: var(--shadow-sm);
+                border: none;
+                outline: none;
+                position: relative;
+                z-index: 2;
+            }
+
+            .welcome-box .box-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            /* Stats Boxes */
+            .stats-box {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: space-between;
+                min-height: 140px;
+                padding: 1.5rem;
+                border-left: 4px solid var(--primaryColor);
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                width: 100%;
+            }
+
+            .stats-box:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .stats-box::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 80px;
+                height: 80px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                transform: translate(30%, -30%);
+            }
+
+            .stats-box .stats-value {
+                font-size: var(--fs30);
+                font-weight: 700;
+                margin-bottom: 0.25rem;
+                color: var(--textColor);
+            }
+
+            .stats-box .stats-label {
+                text-transform: uppercase;
+                font-size: var(--fs13);
+                font-weight: 500;
+                color: var(--darkGray);
+                letter-spacing: 0.5px;
+                display: block;
+            }
+
+            .stats-box .stats-icon {
+                font-size: 2.5rem;
+                color: var(--primaryColor);
+                opacity: 0.8;
+                margin-top: 0.5rem;
+                align-self: flex-end;
+            }
+
+            .stats-box.trend-up .stats-value {
+                color: var(--secondaryColor);
+            }
+
+            .stats-box.trend-down .stats-value {
+                color: var(--dangerColor);
+            }
+
+            .stats-box.secondary {
+                border-left-color: var(--secondaryColor);
+            }
+
+            .stats-box.secondary .stats-icon {
+                color: var(--secondaryColor);
+            }
+
+            .stats-box.danger {
+                border-left-color: var(--dangerColor);
+            }
+
+            .stats-box.danger .stats-icon {
+                color: var(--dangerColor);
+            }
+
+            .stats-box.warning {
+                border-left-color: var(--warningColor);
+            }
+
+            .stats-box.warning .stats-icon {
+                color: var(--warningColor);
+            }
+
+            /* Trend indicator */
+            .trend-indicator {
+                display: inline-flex;
+                align-items: center;
+                font-size: var(--fs13);
+                font-weight: 500;
+                padding: 0.25rem 0.5rem;
+                border-radius: var(--smallBorder);
+                margin-left: 0.5rem;
+            }
+
+            .trend-up {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: var(--secondaryColor);
+            }
+
+            .trend-down {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: var(--dangerColor);
+            }
+
+            .trend-neutral {
+                background-color: rgba(156, 163, 175, 0.1);
+                color: var(--darkGray);
+            }
+
+            /* Data Table Section */
+            .data-table-section {
+                width: 100%;
+                padding: 1.5rem;
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .data-table-section .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .data-table-section .section-title {
+                font-size: var(--fs18);
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .data-table-section .section-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            /* Filter Controls */
+            .filter-controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background-color: var(--lightGray);
+                border-radius: var(--smallBorder);
+            }
+
+            .filter-group {
+                display: flex;
+                flex-direction: column;
+                min-width: 200px;
+                flex-grow: 1;
+            }
+
+            .filter-label {
+                font-size: var(--fs13);
+                font-weight: 500;
+                color: var(--darkGray);
+                margin-bottom: 0.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .filter-select {
+                padding: 0.625rem 1rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                color: var(--textColor);
+                background-color: var(--whiteColor);
+                transition: all 0.2s ease;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 0.75rem center;
+                background-size: 1rem;
+            }
+
+            .filter-select:focus {
+                outline: none;
+                border-color: var(--primaryLight);
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .filter-actions {
+                display: flex;
+                align-items: flex-end;
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.625rem 1.25rem;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .filter-btn.apply {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+            }
+
+            .filter-btn.apply:hover {
+                background-color: var(--primaryDark);
+            }
+
+            .filter-btn.reset {
+                background-color: var(--lightGray);
+                color: var(--darkGray);
+            }
+
+            .filter-btn.reset:hover {
+                background-color: var(--mediumGray);
+            }
+
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: var(--fs14);
+            }
+
+            .table th {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+                padding: 1rem 1.25rem;
+                text-align: left;
+                font-weight: 500;
+                text-transform: uppercase;
+                font-size: var(--fs13);
+                letter-spacing: 0.5px;
+            }
+
+            .table td {
+                padding: 1rem 1.25rem;
+                border-bottom: 1px solid var(--borderColor);
+                vertical-align: middle;
+                color: var(--textColor);
+            }
+
+            .table tr:nth-child(even) {
+                background-color: var(--lightGray);
+            }
+
+            .table tr:hover {
+                background-color: rgba(79, 70, 229, 0.03);
+            }
+
+            .status-badge {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 50px;
+                font-size: var(--fs13);
+                font-weight: 500;
+            }
+
+            .status-active {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: var(--secondaryColor);
+            }
+
+            .status-pending {
+                background-color: rgba(245, 158, 11, 0.1);
+                color: var(--warningColor);
+            }
+
+            .status-inactive {
+                background-color: rgba(156, 163, 175, 0.1);
+                color: var(--darkGray);
+            }
+
+            /* Action buttons */
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--smallBorder);
+                color: var(--darkGray);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                border: none;
+                background: transparent;
+            }
+
+            .action-btn:hover {
+                background-color: var(--lightGray);
+                color: var(--textColor);
+            }
+
+            .action-btn.edit {
+                color: var(--infoColor);
+            }
+
+            .action-btn.delete {
+                color: var(--dangerColor);
+            }
+
+
+
+            /* DataTables Customization */
+            .dataTables_wrapper {
+                width: 100%;
+            }
+
+            .dataTables_wrapper .dataTables_filter {
+                margin-bottom: 1rem;
+            }
+
+            .dataTables_wrapper .dataTables_filter input {
+                padding: 0.5rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                margin-left: 0.5rem;
+                font-size: var(--fs14);
+                transition: all 0.2s ease;
+            }
+
+            .dataTables_wrapper .dataTables_filter input:focus {
+                border-color: var(--primaryLight);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+            }
+
+            .dataTables_wrapper .dataTables_paginate {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.25rem;
+                flex-wrap: nowrap;
+                border-top: 1px solid var(--borderColor);
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+                min-width: 32px;
+                height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 0.5rem;
+                border-radius: var(--smallBorder);
+                border: 1px solid var(--borderColor);
+                color: var(--textColor);
+                font-size: var(--fs14);
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background-color: var(--lightGray);
+                border-color: var(--mediumGray);
+                color: var(--primaryColor);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background-color: var(--primaryColor);
+                border-color: var(--primaryColor);
+                color: var(--whiteColor);
+                font-weight: 600;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+
+            .dataTables_wrapper .dataTables_info {
+                font-size: var(--fs14);
+                color: var(--darkGray);
+                padding-top: 1rem;
+            }
+
+            /* Notification Badge */
+            .notification-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                width: 18px;
+                height: 18px;
+                background-color: var(--dangerColor);
+                color: white;
+                border-radius: 50%;
+                font-size: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+            }
+
+            /* Tooltip */
+            .tooltip-inner {
+                font-size: var(--fs13);
+                padding: 0.375rem 0.75rem;
+                background-color: var(--textColor);
+            }
+
+            .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+            .bs-tooltip-top .tooltip-arrow::before {
+                border-top-color: var(--textColor);
+            }
+
+            /* Responsive Styles */
+            @media (min-width: 576px) {
+                .container {
+                    padding: 1.5rem;
+                }
+
+                .stats-box {
+                    flex-direction: row;
+                    align-items: center;
+                }
+
+                .stats-box .stats-icon {
+                    margin-top: 0;
+                    font-size: 3rem;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .main {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 1.5rem;
+                }
+
+                .welcome-box {
+                    grid-column: span 2;
+                }
+
+                .data-table-section {
+                    grid-column: span 2;
+                }
+            }
+
+            @media (min-width: 992px) {
+                .container {
+                    padding: 2rem;
+                }
+
+                .main {
+                    grid-template-columns: repeat(12, 1fr);
+                    grid-auto-rows: minmax(150px, auto);
+                    gap: 1.5rem;
+                }
+
+                .welcome-box {
+                    grid-column: span 12;
+                    grid-row: 1;
+                }
+
+                .stats-box {
+                    grid-column: span 3;
+                    grid-row: 2;
+                }
+
+                .data-table-section {
+                    grid-column: span 12;
+                    grid-row: 3;
+                }
+
+                .welcome-box::before {
+                    width: 300px;
+                    height: 300px;
+                    top: -100px;
+                    right: -100px;
+                }
+
+                .welcome-box::after {
+                    width: 400px;
+                    height: 400px;
+                    bottom: -150px;
+                    right: -150px;
+                }
+            }
+
+            @media (min-width: 1200px) {
+                .container {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                }
+            }
+
+            /* Small screens (below 576px) */
+            @media (max-width: 575.98px) {
+                html {
+                    font-size: 14px;
+                }
+
+                .container {
+                    padding: 1rem;
+                }
+
+                .main {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .box,
+                .welcome-box,
+                .data-table-section {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-right: 0;
+                    padding: 1rem;
+                }
+
+                .welcome-box {
+                    padding: 1.5rem;
+                }
+
+                .welcome-box .box-title {
+                    font-size: var(--fs20);
+                }
+
+                .welcome-box .box-text {
+                    font-size: var(--fs14);
+                }
+
+                .stats-box {
+                    min-height: 120px;
+                    padding: 1rem;
+                }
+
+                .stats-box .stats-value {
+                    font-size: var(--fs24);
+                }
+
+                .stats-box .stats-icon {
+                    font-size: 2rem;
+                }
+
+                .table th,
+                .table td {
+                    padding: 0.75rem;
+                    font-size: var(--fs13);
+                }
+
+                .dataTables_wrapper .dataTables_length,
+                .dataTables_wrapper .dataTables_filter {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                }
+
+                .dataTables_wrapper .dataTables_filter input {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-top: 0.5rem;
+                }
+
+                /* Mobile pagination adjustments */
+                .dataTables_wrapper .dataTables_paginate {
+                    gap: 0.125rem;
+                }
+
+                .dataTables_wrapper .dataTables_paginate .paginate_button {
+                    min-width: 28px;
+                    height: 28px;
+                    font-size: var(--fs13);
+                    padding: 0 0.25rem;
+                }
+
+                /* Filter controls on mobile */
+                .filter-controls {
+                    flex-direction: column;
+                    gap: 0.75rem;
+                }
+
+                .filter-group {
+                    min-width: 100%;
+                }
+            }
+
+            /* Animation Classes */
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .pulse {
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+
+
+
+
+        <script>
+            <% if (messages.success) { %>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "<%= messages.success %>",
+                    confirmButtonColor: '#3085d6'
+                });
+            <% } %>
+        
+            <% if (messages.error) { %>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "<%= messages.error %>",
+                    confirmButtonColor: '#d33'
+                });
+            <% } %>
+
+        </script>
+
+
+
+
+        <div class="container" id="top">
+            <main class="content">
+                <section class="main">
+                    <!-- Welcome Box -->
+                    <div class="box welcome-box fade-in">
+                        <div class="box-left">
+
+
+                            <h5 class="box-title">NOTICE SECTION</h5>
+                            <p id="date"> </p>
+
+                            <script>
+
+                                const today = new Date().toISOString().split('T')[0];
+                                const prefix = 'Date : '
+
+                                document.getElementById('date').textContent = prefix + today
+
+                            </script>
+
+
+                            <% allnotice.forEach((notice)=>{ %>
+
+
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <strong>New Notice !</strong>
+                                    <%=notice.Title%>
+
+                                        <a class="btn btn-primary btn-sm" href="/DPS/notice/<%=notice._id%>"
+                                            role="button">Read Now</a>
+
+
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+
+                                </div>
+
+
+                                <%}) %>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <!-- Stats Boxes -->
+                    <div class="box stats-box fade-in" style="animation-delay: 0.1s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value">
+                                <%=totalpaidAmount%> <span class="trend-indicator trend-up"></span>
+                            </h4>
+                            <span class="stats-label">My Total Donations </span>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fa fa-inr"></i>
+
+                        </div>
+                    </div>
+
+                    <div class="box stats-box secondary fade-in" style="animation-delay: 0.2s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value">
+                                <%=totalMembers%> <span class="trend-indicator trend-up"></span>
+                            </h4>
+                            <span class="stats-label">Total DPS Members</span>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+
+                    <div class="box stats-box warning fade-in" style="animation-delay: 0.3s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value">
+                                <%=dueAmount%> <span class="trend-indicator trend-down">
+
+                            </h4>
+                            <span class="stats-label">My Due Amount</span>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fa fa-inr"></i>
+                        </div>
+                    </div>
+
+                    <div class="box stats-box danger fade-in" style="animation-delay: 0.4s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value"><a class="btn btn-primary btn-sm" href="#" role="button">Download My
+                                    ID card</a>
+                                </span></h4>
+                            <span class="stats-label"> My ID card</span>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fa-solid fa-id-card"></i>
+
+                        </div>
+                    </div>
+
+
+
+                    <!-- Data Table Section -->
+                    <div class="data-table-section fade-in" style="animation-delay: 0.6s;">
+                        <div class="section-header">
+                            <h3 class="section-title">Donation Report </h3>
+                            <div class="section-actions">
+                                <a href="/DPS/member-dashboard/add-donation" class="box-action-btn" title="Add New"
+                                    style='text-decoration : none'>
+                                    <i class="fas fa-plus"></i>
+
+                                    <a href="/download-donation-report-excel" class="box-action-btn"
+                                        title="Export in excel" style='text-decoration : none'>
+                                        <i class="fa-solid fa-file-excel"></i>
+                                    </a>
+
+                                    <a href="/download-donation-report-pdf" class="box-action-btn" title="PDF"
+                                        style='text-decoration : none'>
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                    </a>
+
+
+                            </div>
+                        </div>
+
+                        <!-- Filter Controls -->
+                        <div class="filter-controls">
+                            <div class="filter-group">
+                                <label class="filter-label">Financial Year</label>
+                                <select class="filter-select" id="allYears">
+                                    <option value="">All Year</option>
+
+                                    <% financialYear.forEach((year)=>{ %>
+
+                                        <option value="<%=year.Year%>">
+                                            <%=year.Year%>
+                                        </option>
+
+                                        <% })%>
+
+                                </select>
+                            </div>
+
+                            <div class="filter-actions">
+                                <button class="filter-btn apply" id="filterButton">
+                                    <i class="fas fa-filter"></i> Apply
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="donationTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sl No </th>
+                                        <th>Payment Date</th>
+                                        <th>Payment Year</th>
+                                        <th>Payment Month</th>
+                                        <th>Amount</th>
+                                        <th>Payment Method</th>
+                                        <th> Refund</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <% memberSourse.Donation.forEach((d)=>{ %>
+
+                                        <tr data-year="<%=d.paymentYear%>">
+                                            <td>
+                                                <%=d.Receipt_No%>
+                                            </td>
+
+
+                                            <td>
+                                                <%=d.paymentDate%>
+                                            </td>
+
+                                            <td>
+                                                <%=d.paymentYear%>
+
+                                            </td>
+
+                                            <td>
+                                                <%=d.paymentMonth%>
+
+                                            </td>
+
+                                            <td>
+                                                <%=d.paymentAmount%>
+
+                                            </td>
+
+                                            <td>
+                                                <%=d.paymentMethod%>
+
+                                            </td>
+
+                                            <td>
+                                                <a href="/donation-refund/<%=d._id%>" class="btn-primary btn-sm"
+                                                    href="#" role="button">Refund</a>
+
+
+                                            </td>
+
+                                            <td>
+                                                <div class="d-flex gap-1">
+                                                    <a href="/edit-payment-details/<%=d._id%>" class="action-btn edit"
+                                                        title="Edit" data-toggle="tooltip">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="#" onclick="deleteDonation('<%=d._id%>')"
+                                                        class="action-btn delete" title="Delete" data-toggle="tooltip">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+
+
+                                                    <script>
+
+                                                        const deleteDonation = (id) => {
+
+                                                            Swal.fire({
+                                                                title: "Are you sure?",
+                                                                text: "You won't be able to revert this!",
+                                                                icon: "warning",
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: "#3085d6",
+                                                                cancelButtonColor: "#d33",
+                                                                confirmButtonText: "Yes, delete it!"
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+
+                                                                    window.location.href = `/delete-donation/${id}`
+
+                                                                }
+                                                            });
+
+                                                        }
+
+                                                    </script>
+
+
+                                                </div>
+
+
+
+                                                <a href="/download-donation-receipt/<%=d._id%>"
+                                                    class="action-btn delete" title="Invoice" data-toggle="tooltip">
+                                                    <i class="fa-solid fa-file-pdf"></i>
+                                                </a>
+
+
+                                            </td>
+                                        </tr>
+
+                                        <% })%>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Scroll to top button -->
+        <button class="scroll-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+
+        <script>
+            $(document).ready(function () {
+                // Initialize DataTable with responsive settings
+                $('#donationTable').DataTable({
+                    responsive: true,
+                    paging: true,
+                    searching: true,
+                    info: true,
+                    autoWidth: false,
+                    lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    dom: '<"top"lf>rt<"bottom"ip>',
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search programs...",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoEmpty: "Showing 0 to 0 of 0 entries",
+                        infoFiltered: "(filtered from _MAX_ total entries)",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "Next",
+                            previous: "Previous"
+                        }
+                    }
+                });
+
+                // Show/hide scroll to top button
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 300) {
+                        $('.scroll-top').addClass('active');
+                    } else {
+                        $('.scroll-top').removeClass('active');
+                    }
+                });
+
+
+
+                // Initialize tooltips
+                $('[data-toggle="tooltip"]').tooltip();
+
+
+            });
+
+
+            $('#filterButton').on('click', () => {
+
+                let selectedYear = $('#allYears').val();
+
+                $('#donationTable tbody tr').each(function () {
+
+
+                    $(this).toggle(
+
+                        (selectedYear === "" || $(this).attr('data-year') === selectedYear)
+
+                    );
+
+                })
+
+            })
+
+
+        </script>
+
+</html>

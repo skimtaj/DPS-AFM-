@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<%-include('common_header', {admin : adminSourse})%>
+
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Admin Dashboard | Financial Year Management</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+
+            :root {
+                --primaryColor: #4F46E5;
+                --primaryLight: #6366F1;
+                --primaryLighter: #818CF8;
+                --primaryDark: #4338CA;
+                --secondaryColor: #10B981;
+                --dangerColor: #EF4444;
+                --warningColor: #F59E0B;
+                --infoColor: #3B82F6;
+                --whiteColor: #FFFFFF;
+                --lightGray: #F9FAFB;
+                --mediumGray: #E5E7EB;
+                --darkGray: #6B7280;
+                --textColor: #111827;
+                --borderColor: #D1D5DB;
+                --smallBorder: 8px;
+                --mediumBorder: 12px;
+                --bigBorder: 16px;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --fs13: 0.8125rem;
+                --fs14: 0.875rem;
+                --fs15: 0.9375rem;
+                --fs16: 1rem;
+                --fs18: 1.125rem;
+                --fs20: 1.25rem;
+                --fs24: 1.5rem;
+                --fs30: 1.875rem;
+                --fs36: 2.25rem;
+                --sidebarWidth: 280px;
+                --headerHeight: 70px;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                position: relative;
+                color: var(--textColor);
+                background-color: var(--lightGray);
+                min-height: 100vh;
+                overflow-x: hidden;
+                line-height: 1.5;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                line-height: 1.3;
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background-color: var(--lightGray);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background-color: var(--primaryLight);
+                border-radius: 3px;
+            }
+
+            .container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                padding: 1.5rem;
+            }
+
+            /* Data Table Section */
+            .data-table-section {
+                width: 100%;
+                padding: 1.5rem;
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .data-table-section .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .data-table-section .section-title {
+                font-size: var(--fs18);
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .data-table-section .section-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: var(--fs14);
+            }
+
+            .table th {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+                padding: 1rem 1.25rem;
+                text-align: left;
+                font-weight: 500;
+                text-transform: uppercase;
+                font-size: var(--fs13);
+                letter-spacing: 0.5px;
+            }
+
+            .table td {
+                padding: 1rem 1.25rem;
+                border-bottom: 1px solid var(--borderColor);
+                vertical-align: middle;
+                color: var(--textColor);
+            }
+
+            .table tr:nth-child(even) {
+                background-color: var(--lightGray);
+            }
+
+            .table tr:hover {
+                background-color: rgba(79, 70, 229, 0.03);
+            }
+
+            /* Action buttons */
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--smallBorder);
+                color: var(--darkGray);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                border: none;
+                background: transparent;
+            }
+
+            .action-btn:hover {
+                background-color: var(--lightGray);
+                color: var(--textColor);
+            }
+
+            .action-btn.edit {
+                color: var(--infoColor);
+            }
+
+            .action-btn.delete {
+                color: var(--dangerColor);
+            }
+
+            /* DataTables Customization */
+            .dataTables_wrapper {
+                width: 100%;
+            }
+
+            .dataTables_wrapper .dataTables_filter {
+                margin-bottom: 1rem;
+            }
+
+            .dataTables_wrapper .dataTables_filter input {
+                padding: 0.5rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                margin-left: 0.5rem;
+                font-size: var(--fs14);
+                transition: all 0.2s ease;
+            }
+
+            .dataTables_wrapper .dataTables_filter input:focus {
+                border-color: var(--primaryLight);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+            }
+
+            .dataTables_wrapper .dataTables_paginate {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.25rem;
+                flex-wrap: nowrap;
+                border-top: 1px solid var(--borderColor);
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+                min-width: 32px;
+                height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 0.5rem;
+                border-radius: var(--smallBorder);
+                border: 1px solid var(--borderColor);
+                color: var(--textColor);
+                font-size: var(--fs14);
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background-color: var(--lightGray);
+                border-color: var(--mediumGray);
+                color: var(--primaryColor);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background-color: var(--primaryColor);
+                border-color: var(--primaryColor);
+                color: var(--whiteColor);
+                font-weight: 600;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+
+            .dataTables_wrapper .dataTables_info {
+                font-size: var(--fs14);
+                color: var(--darkGray);
+                padding-top: 1rem;
+            }
+
+            /* Tooltip */
+            .tooltip-inner {
+                font-size: var(--fs13);
+                padding: 0.375rem 0.75rem;
+                background-color: var(--textColor);
+            }
+
+            .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+            .bs-tooltip-top .tooltip-arrow::before {
+                border-top-color: var(--textColor);
+            }
+
+            @media (min-width: 992px) {
+                .container {
+                    padding: 2rem;
+                }
+
+                .main {
+                    grid-template-columns: repeat(12, 1fr);
+                    grid-auto-rows: minmax(150px, auto);
+                    gap: 1.5rem;
+                }
+
+                .data-table-section {
+                    grid-column: span 12;
+                }
+            }
+
+            @media (min-width: 1200px) {
+                .container {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                }
+            }
+
+            /* Small screens (below 576px) */
+            @media (max-width: 575.98px) {
+                html {
+                    font-size: 14px;
+                }
+
+                .container {
+                    padding: 1rem;
+                }
+
+                .main {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .box,
+                .data-table-section,
+                .member-form-section {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-right: 0;
+                    padding: 1rem;
+                }
+
+                .table th,
+                .table td {
+                    padding: 0.75rem;
+                    font-size: var(--fs13);
+                }
+
+                .dataTables_wrapper .dataTables_length,
+                .dataTables_wrapper .dataTables_filter {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                }
+
+                .dataTables_wrapper .dataTables_filter input {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-top: 0.5rem;
+                }
+
+                /* Mobile pagination adjustments */
+                .dataTables_wrapper .dataTables_paginate {
+                    gap: 0.125rem;
+                }
+
+                .dataTables_wrapper .dataTables_paginate .paginate_button {
+                    min-width: 28px;
+                    height: 28px;
+                    font-size: var(--fs13);
+                    padding: 0 0.25rem;
+                }
+
+            }
+
+            /* Animation Classes */
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                display: none;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .modal-content {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                width: 100%;
+                max-width: 500px;
+                padding: 25px;
+                animation: modalFadeIn 0.3s ease-out;
+            }
+
+            @keyframes modalFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid var(--borderColor);
+            }
+
+            .modal-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--primaryColor);
+            }
+
+            .modal-close {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: var(--darkGray);
+                transition: color 0.2s ease;
+            }
+
+            .modal-close:hover {
+                color: var(--dangerColor);
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: var(--textColor);
+                font-size: var(--fs14);
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 10px 12px;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                transition: all 0.2s ease;
+            }
+
+            .form-control:focus {
+                border-color: var(--primaryLight);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                margin-top: 25px;
+                padding-top: 15px;
+                border-top: 1px solid var(--borderColor);
+            }
+
+            .btn {
+                padding: 10px 20px;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                border: none;
+                transition: all 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .btn-primary {
+                background-color: var(--primaryColor);
+                color: white;
+            }
+
+            .btn-primary:hover {
+                background-color: var(--primaryDark);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .btn-secondary {
+                background-color: var(--lightGray);
+                color: var(--darkGray);
+            }
+
+            .btn-secondary:hover {
+                background-color: var(--mediumGray);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            /* Add button style */
+            .add-btn {
+                padding: 4px 10px;
+                background-color: var(--primaryColor);
+                color: white;
+                border: none;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .add-btn:hover {
+                background-color: var(--primaryDark);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .add-btn i {
+                font-size: var(--fs14);
+            }
+
+            /* Toast notification */
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: var(--primaryColor);
+                color: white;
+                padding: 15px 25px;
+                border-radius: var(--smallBorder);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                transform: translateY(100px);
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+
+            .toast.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            .toast.success {
+                background-color: var(--secondaryColor);
+            }
+
+            .toast.error {
+                background-color: var(--dangerColor);
+            }
+
+            .toast i {
+                font-size: 1.25rem;
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 15px;
+                }
+
+                .modal-content {
+                    margin: 0 15px;
+                    width: calc(100% - 30px);
+                }
+
+                .form-actions {
+                    flex-direction: column;
+                }
+
+                .btn {
+                    width: 100%;
+                    justify-content: center;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <script>
+            <% if (messages.success) { %>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "<%= messages.success %>",
+                    confirmButtonColor: '#3085d6'
+                });
+            <% } %>
+        
+            <% if (messages.error) { %>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "<%= messages.error %>",
+                    confirmButtonColor: '#d33'
+                });
+            <% } %>
+        </script>
+
+        <div class="container" id="top">
+            <main class="content">
+                <section class="main">
+                    <!-- Data Table Section -->
+                    <div class="data-table-section fade-in" style="animation-delay: 0.2s;">
+                        <div class="section-header">
+                            <h3 class="section-title">Financial Year</h3>
+                            <div class="section-actions">
+                                <button id="addNewFinancialYear" class="add-btn">
+                                    <i class="fas fa-plus"></i> Add New
+                                </button>
+                                <a href="#" class="box-action-btn" title="Export in Excel"
+                                    style="text-decoration: none">
+                                    <i class="fas fa-file-excel"></i>
+                                </a>
+                                <a href="#" class="box-action-btn" title="PDF" style="text-decoration: none">
+                                    <i class="fas fa-file-pdf"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="financialYearTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sl No</th>
+                                        <th>Financial Year</th>
+                                        <th>Prefix</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% allFinancialYear.forEach((year, index)=>{ %>
+                                        <tr>
+                                            <td>
+                                                <%=index+1%>
+                                            </td>
+                                            <td>
+                                                <%=year.Year%>
+                                            </td>
+                                            <td>
+                                                <%=year.Prefix || 'N/A' %>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-primary" href="#" role="button"><i
+                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                                <a class="btn btn-primary" href="#" role="button"
+                                                    onclick="deleteFinancial('<%=year._id%>')"><i
+                                                        class="fa-solid fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        <%}) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Financial Year Modal -->
+        <div class="modal-overlay" id="financialYearModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Add Financial Year</h4>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+
+                <form id="financialYearForm" method="post" action="/DPS/add-financial">
+                    <input type="hidden" id="financialYearId">
+                    <div class="form-group">
+                        <label for="financialYear" class="form-label">Financial Year</label>
+                        <input type="text" id="financialYear" class="form-control" placeholder="e.g. 2023-2024" required
+                            name="Year">
+                    </div>
+                    <div class="form-group">
+                        <label for="prefix" class="form-label">Prefix</label>
+                        <input type="text" id="prefix" class="form-control" placeholder="e.g. FY23" required
+                            name="Prefix">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelForm">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+                $(document).ready(function () {
+                    // Initialize DataTable
+                    const financialYearTable = $('#financialYearTable').DataTable({
+                        responsive: true,
+                        paging: true,
+                        searching: true,
+                        info: true,
+                        autoWidth: false,
+                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                        dom: '<"top"lf>rt<"bottom"ip>',
+                        language: {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search financial years...",
+                            lengthMenu: "Show _MENU_ entries",
+                            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                            infoEmpty: "Showing 0 to 0 of 0 entries",
+                            infoFiltered: "(filtered from _MAX_ total entries)",
+                            paginate: {
+                                first: "First",
+                                last: "Last",
+                                next: "Next",
+                                previous: "Previous"
+                            }
+                        }
+                    });
+
+                    // Modal elements
+                    const modal = $('#financialYearModal');
+                    const addNewBtn = $('#addNewFinancialYear');
+                    const closeModal = $('#closeModal');
+                    const cancelForm = $('#cancelForm');
+                    const financialYearForm = $('#financialYearForm');
+                    const modalTitle = $('#modalTitle');
+                    const financialYearId = $('#financialYearId');
+                    const financialYearField = $('#financialYear');
+                    const prefixField = $('#prefix');
+
+                    // Open modal for adding new financial year
+                    addNewBtn.click(function () {
+                        modalTitle.text('Add Financial Year');
+                        financialYearForm[0].reset();
+                        financialYearId.val('');
+                        modal.css('display', 'flex');
+                    });
+
+                    // Close modal
+                    function closeModalFunc() {
+                        modal.hide();
+                    }
+
+                    closeModal.click(closeModalFunc);
+                    cancelForm.click(closeModalFunc);
+
+                    // Initialize tooltips
+                    $('[data-toggle="tooltip"]').tooltip();
+
+                    // Delete financial year function
+                    window.deleteFinancial = function (id) {
+                        Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = `/delete-financial-year/${id}`;
+                            }
+                        });
+                    }
+                });
+        </script>
+    </body>
+
+</html>

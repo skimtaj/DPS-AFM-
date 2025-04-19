@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%-include('member_common_header' , {member : memberSourse})%>
+
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Fees Collection Form</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            /* Scoped styles with unique class prefixes */
+            .fees-collection-body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f5f7fa;
+                margin: 0;
+                padding: 0;
+                color: #333;
+            }
+
+            .fees-collection-container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .fees-collection-header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .fees-collection-logo {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 15px;
+                background-color: #4a6bff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .fees-collection-title {
+                color: #2c3e50;
+                margin: 0;
+                font-size: 24px;
+            }
+
+            .fees-collection-subtitle {
+                color: #7f8c8d;
+                font-size: 14px;
+                margin-top: 5px;
+            }
+
+            .fees-collection-form-group {
+                margin-bottom: 20px;
+            }
+
+            .fees-collection-label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #2c3e50;
+                font-size: 14px;
+            }
+
+            .fees-collection-input,
+            .fees-collection-select,
+            .fees-collection-textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 16px;
+                transition: border 0.3s;
+                box-sizing: border-box;
+            }
+
+            .fees-collection-textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            .fees-collection-input:focus,
+            .fees-collection-select:focus,
+            .fees-collection-textarea:focus {
+                border-color: #4a6bff;
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.1);
+            }
+
+            .fees-collection-form-row {
+                display: flex;
+                gap: 20px;
+            }
+
+            .fees-collection-form-row .fees-collection-form-group {
+                flex: 1;
+            }
+
+            .fees-collection-button-group {
+                display: flex;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .fees-collection-submit-btn {
+                background-color: #4a6bff;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                flex: 1;
+                transition: background-color 0.3s;
+            }
+
+            .fees-collection-submit-btn:hover {
+                background-color: #3a5bef;
+            }
+
+            .fees-collection-back-btn {
+                background-color: #f5f7fa;
+                color: #4a6bff;
+                border: 1px solid #4a6bff;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                flex: 1;
+                transition: all 0.3s;
+                text-decoration: none;
+                text-align: center;
+            }
+
+            .fees-collection-back-btn:hover {
+                background-color: #e6e9f5;
+            }
+
+            .fees-collection-section {
+                margin: 25px 0;
+                padding: 20px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+            }
+
+            .fees-collection-section-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .fees-collection-payment-method {
+                margin-top: 15px;
+                padding: 15px;
+                background-color: white;
+                border-radius: 6px;
+                border: 1px solid #eee;
+            }
+
+            .fees-collection-qr-code {
+                max-width: 200px;
+                display: block;
+                margin: 10px auto;
+            }
+
+            .fees-collection-text-muted {
+                color: #6c757d;
+                font-size: 14px;
+                margin: 10px 0;
+            }
+
+            .fees-collection-bank-details h6 {
+                margin: 8px 0;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .fees-collection-disabled-input {
+                background-color: #f5f5f5;
+                color: #666;
+                cursor: not-allowed;
+            }
+        </style>
+    </head>
+
+
+
+
+        <body class="fees-collection-body">
+            <div class="fees-collection-container">
+                <div class="fees-collection-header">
+                    <div class="fees-collection-logo">RS</div>
+                    <h1 class="fees-collection-title">Fees Collection</h1>
+                    <p class="fees-collection-subtitle">Please fill in the payment details below</p>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" id="paymentForm">
+                    <div class="fees-collection-student-info">
+                        <div class="fees-collection-form-group">
+                            <label for="studentName" class="fees-collection-label">Name</label>
+                            <input type="text" name="Name" class="fees-collection-input fees-collection-disabled-input"
+                                readonly value="<%=memberSourse.Name%>">
+                        </div>
+                        <div class="fees-collection-form-group">
+                            <label for="mobile" class="fees-collection-label">Mobile</label>
+                            <input type="text" name="Mobile"
+                                class="fees-collection-input fees-collection-disabled-input" readonly
+                                value="<%=memberSourse.Mobile%>">
+                        </div>
+                        <div class="fees-collection-form-group">
+                            <label for="email" class="fees-collection-label">Email</label>
+                            <input type="text" name="Email" class="fees-collection-input fees-collection-disabled-input"
+                                readonly value="<%=memberSourse.Email%>">
+                        </div>
+                    </div>
+
+                    <div class="fees-collection-form-row">
+                        <div class="fees-collection-form-group">
+                            <label for="paymentMonth" class="fees-collection-label">Payment Month</label>
+                            <select name="paymentMonth" class="fees-collection-select" required>
+                                <option value="">Select Month</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                        <div class="fees-collection-form-group">
+                            <label for="paymentYear" class="fees-collection-label">Payment Year</label>
+                            <select name="paymentYear" class="fees-collection-select">
+                                <option value=""> Select Financial Year </option>
+                                <% financialYear.forEach((year)=>{ %>
+                                    <option value="<%=year.Year%>">
+                                        <%=year.Year%>
+                                    </option>
+                                    <% })%>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="fees-collection-form-group">
+                        <label for="feesAmount" class="fees-collection-label">Monthly Fees Amount (Rs)</label>
+                        <select name="paymentAmount" class="fees-collection-select" required>
+                            <option value="">Select Amount</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+
+                    <div class="fees-collection-form-group">
+                        <label for="paymentDate" class="fees-collection-label">Payment Date</label>
+                        <input type="date" name="paymentDate" required id="paymentDate"
+                            class="fees-collection-input fees-collection-disabled-input">
+                    </div>
+
+                    <div class="fees-collection-section">
+                        <div class="fees-collection-section-title">Payment Information</div>
+                        <div class="fees-collection-form-group">
+                            <label for="paymentMethod" class="fees-collection-label">Payment Method</label>
+                            <select id="paymentMethod" name="paymentMethod" class="fees-collection-select" required>
+                                <option value="">Select Method</option>
+                                <option value="qr_code">QR Code</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="cash">Cash</option>
+                            </select>
+                        </div>
+
+                        <div id="qrCodeSection" class="fees-collection-payment-method" style="display: none;">
+                            <p>Scan the QR code below to make payment</p>
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://example.com/pay"
+                                alt="QR Code" class="fees-collection-qr-code">
+                            <p class="fees-collection-text-muted">Upload the payment confirmation screenshot</p>
+                            <input type="file" name="qrProof" accept="image/*" class="fees-collection-input">
+                        </div>
+
+                        <div id="bankTransferSection" class="fees-collection-payment-method" style="display: none;">
+                            <div class="fees-collection-bank-details">
+                                <h6>Bank Name: The Brighat Star Academy</h6>
+                                <h6>Account Number: 88987676456</h6>
+                                <h6>IFSC Code: SBIN00998787</h6>
+                            </div>
+                            <p class="fees-collection-text-muted">Upload the payment confirmation screenshot</p>
+                            <input type="file" name="bankProof" accept="image/*" class="fees-collection-input">
+                        </div>
+
+                        <div id="cashSection" class="fees-collection-payment-method" style="display: none;">
+                            <p class="fees-collection-text-muted">Provide the receipt after cash payment</p>
+                            <input type="text" name="receiptNumber" placeholder="Enter receipt number"
+                                class="fees-collection-input">
+                        </div>
+                    </div>
+
+                    <div class="fees-collection-button-group">
+                        <button type="submit" class="fees-collection-submit-btn">Submit</button>
+                        <a href="/DPS/all-member" class="fees-collection-back-btn">Back</a>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+                document.getElementById("paymentMethod").addEventListener("change", function () {
+                    const value = this.value;
+                    document.getElementById("qrCodeSection").style.display = "none";
+                    document.getElementById("bankTransferSection").style.display = "none";
+                    document.getElementById("cashSection").style.display = "none";
+
+                    if (value === "qr_code") {
+                        document.getElementById("qrCodeSection").style.display = "block";
+                    } else if (value === "bank_transfer") {
+                        document.getElementById("bankTransferSection").style.display = "block";
+                    } else if (value === "cash") {
+                        document.getElementById("cashSection").style.display = "block";
+                    }
+                });
+
+                window.onload = () => {
+                    document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0]
+                }
+            </script>
+        </body>
+
+</html>

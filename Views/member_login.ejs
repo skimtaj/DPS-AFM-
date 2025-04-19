@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBSA Admin Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+        :root {
+            --primary-color: #00894B;
+            --primary-dark: #006B3A;
+            --secondary-color: #2575fc;
+            --accent-color: #6a11cb;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #495057;
+            --text-color: #212529;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: #f5f7fa;
+            overflow: hidden;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 500px;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #fff;
+            box-shadow: var(--shadow);
+            z-index: 2;
+            position: relative;
+        }
+
+        .school-image {
+            flex: 1;
+            background: url('https://alfarahmission.in/wp-content/uploads/2022/10/WhatsApp-Image-2022-10-13-at-11.29.02-PM-1024x462.jpeg') no-repeat center center/cover;
+            position: relative;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            margin-bottom: 15px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: -40px;
+        }
+
+        .login-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        .form-container {
+            width: 100%;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 137, 75, 0.1);
+            background-color: #fff;
+        }
+
+        .input-group input:focus+i {
+            color: var(--primary-color);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 137, 75, 0.2);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password {
+            color: var(--dark-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .signup-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-logo {
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        .modal-header p {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+        }
+
+        .close-modal:hover {
+            color: var(--error-color);
+        }
+
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .file-upload-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 2px dashed var(--medium-gray);
+            position: relative;
+        }
+
+        .file-upload-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .file-upload-preview i {
+            font-size: 2rem;
+            color: var(--dark-gray);
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-label {
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            background: var(--primary-dark);
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .modal-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Form Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        /* Date and Select Input Styles */
+        .date-input-group,
+        .select-input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .date-input-group i,
+        .select-input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+            font-size: 1rem;
+        }
+
+        .date-input-group input,
+        .select-input-group select {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .date-input-group input:focus,
+        .select-input-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 137, 75, 0.1);
+            background-color: #fff;
+        }
+
+        /* Terms Modal Styles */
+        .terms-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            background: var(--light-gray);
+        }
+
+        .terms-container h4 {
+            color: var(--primary-dark);
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .terms-container ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .terms-container li {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .terms-checkbox input {
+            margin-right: 10px;
+        }
+
+        .terms-checkbox label {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .terms-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 992px) {
+            .school-image {
+                display: none;
+            }
+
+            .login-form {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .login-form {
+                padding: 40px 30px;
+            }
+
+            .logo {
+                height: 70px;
+            }
+
+            .terms-container {
+                max-height: 300px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Login Form -->
+    <div class="login-container">
+        <div class="school-image"></div>
+
+        <div class="login-form">
+
+            <div class="logo-container">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvVvzwSA3ngzlhtx6gNSBP6Wd9ZsdAFyR5yw&s"
+                    width="100" height="100">
+            </div>
+
+            <div class="login-header">
+                <h2>Member Portal</h2>
+                <p>Login to access your personalized dashboard </p>
+            </div>
+
+            <% if (messages.success) { %>
+                <div class="alert alert-success" id="msg">
+                    <%= messages.success %>
+                </div>
+                <% } %>
+
+                    <% if (messages.error) { %>
+                        <div class="alert alert-danger" id="msg">
+                            <%= messages.error %>
+                        </div>
+                        <% } %>
+
+                            <div class="form-container">
+                                <form method="post">
+                                    <div class="input-group">
+                                        <i class="fas fa-envelope"></i>
+                                        <input type="email" id="email" placeholder="Enter your email" required
+                                            name="Email">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <input type="password" id="password" placeholder="Enter your password" required
+                                            name="Password">
+                                        <i class="password-toggle fas fa-eye" id="togglePassword"></i>
+                                    </div>
+
+                                    <button type="submit" class="login-btn">
+                                        <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Sign In
+                                    </button>
+
+                                    <div class="form-footer">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        </div>
+                                        <a href="/DPS/member-forget-password" class="forgot-password">Forgot
+                                            Password?</a>
+                                    </div>
+                                </form>
+
+                                <div class="signup-link">
+                                    Don't have an account? <a id="openTermsModal">Request access</a>
+                                </div>
+                            </div>
+        </div>
+    </div>
+
+    <!-- Terms and Conditions Modal -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal-container" style="max-width: 600px;">
+            <button class="close-modal" id="closeTermsModal">&times;</button>
+
+            <div class="modal-header">
+                <h3>Terms and Conditions</h3>
+            </div>
+
+            <div class="terms-container">
+                <p>Please read Terms & Conditions before Signup</p>
+
+                <h4>1. Account Responsibility</h4>
+                <ul>
+                    <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
+                    <li>All activities that occur under your account are your responsibility.</li>
+                    <li>You must immediately notify us of any unauthorized use of your account.</li>
+                </ul>
+
+                <h4>2. Data Privacy</h4>
+                <ul>
+                    <li>We collect personal information to provide and improve our services.</li>
+                    <li>Your data will be protected according to our privacy policy.</li>
+                    <li>We may use your contact information to send important notices.</li>
+                </ul>
+
+                <h4>3. Acceptable Use</h4>
+                <ul>
+                    <li>You agree not to use the service for any illegal or unauthorized purpose.</li>
+                    <li>You must not violate any laws in your jurisdiction.</li>
+                    <li>You must not transmit any viruses or malicious code.</li>
+                </ul>
+
+                <h4>4. Content Ownership</h4>
+                <ul>
+                    <li>You retain ownership of any content you submit or upload.</li>
+                    <li>By uploading content, you grant us a license to use it for service provision.</li>
+                    <li>You are responsible for ensuring you have rights to any content you upload.</li>
+                </ul>
+
+                <h4>5. Service Modifications</h4>
+                <ul>
+                    <li>We reserve the right to modify or discontinue the service at any time.</li>
+                    <li>We may impose limits on certain features or restrict access without notice.</li>
+                    <li>We are not liable for any modification or discontinuation of the service.</li>
+                </ul>
+
+                <h4>6. Termination</h4>
+                <ul>
+                    <li>We may terminate or suspend your account immediately for violations.</li>
+                    <li>You may stop using our service at any time.</li>
+                    <li>Termination may result in deletion of your content.</li>
+                </ul>
+            </div>
+
+            <div class="terms-checkbox">
+                <input type="checkbox" id="acceptTerms" required>
+                <label for="acceptTerms"> Agree with the Terms & Conditions</label>
+            </div>
+
+            <button type="button" class="modal-btn" id="proceedToSignup">
+                <i class="fas fa-arrow-right" style="margin-right: 8px;"></i> Proceed to Signup
+            </button>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal-container">
+            <button class="close-modal" id="closeSignupModal">&times;</button>
+
+            <form id="signupForm" action="/DPS/member-signup" method="post" enctype="multipart/form-data">
+                <div class="file-upload full-width">
+                    <div class="file-upload-preview" id="imagePreview">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <input type="file" id="profileImage" accept="image/*" name="Profile_Image" required>
+                    <label for="profileImage" class="file-upload-label">Upload Profile Photo</label>
+                </div>
+
+                <div class="form-grid">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="fullName" placeholder="Full Name" required name="Name">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="text" id="mobile" placeholder="Mobile Number" required name="Mobile">
+                    </div>
+
+                    <div class="input-group full-width">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="Email Address" required name="Email">
+                    </div>
+
+                    <div class="date-input-group">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="joiningDate" placeholder="Joining Date" required name="joiningDate">
+                    </div>
+
+                    <div class="select-input-group">
+                        <i class="fas fa-graduation-cap"></i>
+                        <select id="passingYear" required name="passingYear">
+                            <option value="" disabled selected>Select Passing Year</option>
+
+                            <% allAcademicYear.forEach((year)=>{ %>
+
+                                <option value="<%=year.Year%>">
+                                    <%=year.Year%>
+                                </option>
+
+                                <%}) %>
+
+                        </select>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <input type="password" id="signupPassword" placeholder="Create Password" required
+                            name="Password">
+                        <i class="password-toggle fas fa-eye" id="toggleSignupPassword"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="modal-btn full-width">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Submit Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Toggle signup password visibility
+        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+        const signupPassword = document.getElementById('signupPassword');
+
+        toggleSignupPassword.addEventListener('click', function () {
+            const type = signupPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            signupPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Modal functionality
+        const signupModal = document.getElementById('signupModal');
+        const termsModal = document.getElementById('termsModal');
+        const openTermsModal = document.getElementById('openTermsModal');
+        const closeSignupModal = document.getElementById('closeSignupModal');
+        const closeTermsModal = document.getElementById('closeTermsModal');
+        const proceedToSignup = document.getElementById('proceedToSignup');
+
+        // Open Terms Modal
+        openTermsModal.addEventListener('click', () => {
+            termsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close Terms Modal
+        closeTermsModal.addEventListener('click', () => {
+            termsModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close Terms Modal when clicking outside
+        termsModal.addEventListener('click', (e) => {
+            if (e.target === termsModal) {
+                termsModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Proceed to Signup from Terms
+        proceedToSignup.addEventListener('click', () => {
+            if (document.getElementById('acceptTerms').checked) {
+                termsModal.classList.remove('active');
+                signupModal.classList.add('active');
+            } else {
+                alert('Please accept the Terms and Conditions to proceed.');
+            }
+        });
+
+        // Close Signup Modal
+        closeSignupModal.addEventListener('click', () => {
+            signupModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close Signup Modal when clicking outside
+        signupModal.addEventListener('click', (e) => {
+            if (e.target === signupModal) {
+                signupModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Profile image upload preview
+        const profileImage = document.getElementById('profileImage');
+        const imagePreview = document.getElementById('imagePreview');
+
+        profileImage.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.addEventListener('load', function () {
+                    imagePreview.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = this.result;
+                    imagePreview.appendChild(img);
+                });
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Set current year as default for passing year dropdown
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentYear = new Date().getFullYear();
+            const passingYearSelect = document.getElementById('passingYear');
+
+
+
+            // Set default date to today for joining date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('joiningDate').value = today;
+        });
+
+        // Auto-hide messages after 4 seconds
+        setTimeout(() => {
+            const msgElement = document.getElementById('msg');
+            if (msgElement) {
+                msgElement.style.display = 'none';
+            }
+        }, 4000);
+    </script>
+</body>
+
+</html>

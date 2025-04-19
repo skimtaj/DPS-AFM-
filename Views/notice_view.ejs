@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%-include('member_common_header' , {member : memberSourse})%>
+
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>School Notice Board | Greenfield Academy</title>
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #3498db;
+                --accent-color: #e74c3c;
+                --light-color: #ecf0f1;
+                --dark-color: #2c3e50;
+                --success-color: #27ae60;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f7fa;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            header {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 20px 0;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+
+
+
+
+
+            .notice-container {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                margin-top: 30px;
+                overflow: hidden;
+            }
+
+            .notice-header {
+                background-color: var(--secondary-color);
+                color: white;
+                padding: 20px;
+                position: relative;
+            }
+
+            .notice-title {
+                font-size: 1.8rem;
+                margin: 0;
+            }
+
+            .notice-meta {
+                display: flex;
+                margin-top: 10px;
+                font-size: 0.9rem;
+            }
+
+            .notice-meta div {
+                margin-right: 20px;
+                display: flex;
+                align-items: center;
+            }
+
+            .notice-meta i {
+                margin-right: 5px;
+                font-size: 1rem;
+            }
+
+
+
+            .notice-body {
+                padding: 30px;
+            }
+
+            .notice-content {
+                font-size: 1.1rem;
+                line-height: 1.8;
+            }
+
+            .notice-attachments {
+                margin-top: 30px;
+                border-top: 1px solid #eee;
+                padding-top: 20px;
+            }
+
+            .attachment-title {
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+
+            .attachment-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .attachment-item {
+                display: flex;
+                align-items: center;
+                padding: 10px 15px;
+                background-color: var(--light-color);
+                border-radius: 5px;
+                transition: all 0.3s ease;
+            }
+
+            .attachment-item:hover {
+                background-color: #d6eaf8;
+            }
+
+            .attachment-icon {
+                margin-right: 10px;
+                color: var(--secondary-color);
+                font-size: 1.2rem;
+            }
+
+            .notice-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 30px;
+                background-color: #f9f9f9;
+                border-top: 1px solid #eee;
+            }
+
+            .notice-category {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 0.8rem;
+            }
+
+            .back-button {
+                background-color: var(--secondary-color);
+                color: white;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .back-button:hover {
+                background-color: #2980b9;
+            }
+
+            @media (max-width: 768px) {
+                .header-content {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+
+            }
+
+
+            @media (max-width: 576px) {
+                .notice-title {
+                    font-size: 22px;
+                }
+
+                .notice-content {
+
+                    font-size: 15px;
+
+                }
+
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+
+    <body>
+
+
+        <main class="container">
+            <div class="notice-container">
+                <div class="notice-header">
+                    <h1 class="notice-title">
+                        <%=noticeSourse.Title%>
+                    </h1>
+                    <div class="notice-meta">
+                        <div><i class="far fa-calendar-alt"></i> Published: <%=noticeSourse.Date%>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notice-body">
+                    <div class="notice-content">
+
+
+                        <p>
+                            <%=noticeSourse.Description%>
+                        </p>
+
+
+
+
+                    </div>
+
+                    <div class="notice-attachments">
+                        <div class="attachment-title">Attachments:</div>
+                        <div class="attachment-list">
+                            <a href="/download-notice/<%=noticeSourse._id%>" class="attachment-item">
+                                <span class="attachment-icon"><i class="fas fa-file-pdf"></i></span>
+                                <span>Click Here to Download </span>
+                            </a>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notice-footer">
+                    <a href="/DPS/member-dashboard" class="back-button"><i class="fas fa-arrow-left"></i> Back </a>
+                </div>
+            </div>
+        </main>
+    </body>
+
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('common_header', {admin: adminSourse}) %>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Fees Collection Form</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            /* Your CSS styles as provided above */
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f5f7fa;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+            }
+
+            .form-container {
+                max-width: 700px;
+                margin: 0 auto;
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 15px;
+                background-color: #4a6bff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            h1 {
+                color: #2c3e50;
+                margin: 0;
+                font-size: 24px;
+            }
+
+            .subtitle {
+                color: #7f8c8d;
+                font-size: 14px;
+                margin-top: 5px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #2c3e50;
+                font-size: 14px;
+            }
+
+            input,
+            select,
+            textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 16px;
+                transition: border 0.3s;
+                box-sizing: border-box;
+            }
+
+            textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            input:focus,
+            select:focus,
+            textarea:focus {
+                border-color: #4a6bff;
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.1);
+            }
+
+            .form-row {
+                display: flex;
+                gap: 20px;
+            }
+
+            .form-row .form-group {
+                flex: 1;
+            }
+
+            .button-group {
+                display: flex;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .submit-btn {
+                background-color: #4a6bff;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                flex: 1;
+                transition: background-color 0.3s;
+            }
+
+            .submit-btn:hover {
+                background-color: #3a5bef;
+            }
+
+            .back-btn {
+                background-color: #f5f7fa;
+                color: #4a6bff;
+                border: 1px solid #4a6bff;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                flex: 1;
+                transition: all 0.3s;
+                text-decoration: none;
+                text-align: center;
+            }
+
+            .back-btn:hover {
+                background-color: #e6e9f5;
+            }
+
+            .fees-section {
+                margin: 25px 0;
+                padding: 20px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+            }
+
+            .fees-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .payment-method {
+                margin-top: 15px;
+                padding: 15px;
+                background-color: white;
+                border-radius: 6px;
+                border: 1px solid #eee;
+            }
+
+            .qr-code {
+                max-width: 200px;
+                display: block;
+                margin: 10px auto;
+            }
+
+            .text-muted {
+                color: #6c757d;
+                font-size: 14px;
+                margin: 10px 0;
+            }
+
+            .bank-details h6 {
+                margin: 8px 0;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .disabled-input {
+                background-color: #f5f5f5;
+                color: #666;
+                cursor: not-allowed;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="form-container">
+            <div class="header">
+                <div class="logo">RS</div>
+                <h1>Edit Fees Collection </h1>
+                <p class="subtitle">Please edit the payment details below</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="paymentForm">
+                <div class="student-info">
+                    <div class="form-group">
+                        <label for="studentName">Name</label>
+                        <input type="text" name="Name" class="disabled-input" readonly
+                            value="<%=financialSpourse.Name%>">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile</label>
+                        <input type="text" name="Mobile" class="disabled-input" readonly
+                            value="<%=financialSpourse.Mobile%>">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" name="Email" class="disabled-input" readonly " value="
+                            <%=financialSpourse.Email%>" >
+                    </div>
+                </div>
+
+                <div class=" form-row">
+                    <div class="form-group">
+                        <label for="paymentMonth">Payment Month</label>
+                        <select name="paymentMonth" required>
+                            <option value="">Select Month</option>
+                            <option value="January" <%=financialSpourse.paymentMonth==='January' ? 'selected' : '' %>>
+                                January</option>
+                            <option value="February" <%=financialSpourse.paymentMonth==='February' ? 'selected' : '' %>
+                                >February</option>
+                            <option value="March" <%=financialSpourse.paymentMonth==='March' ? 'selected' : '' %> >March
+                            </option>
+                            <option value="April" <%=financialSpourse.paymentMonth==='April' ? 'selected' : '' %> >April
+                            </option>
+                            <option value="May" <%=financialSpourse.paymentMonth==='May' ? 'selected' : '' %> >May
+                            </option>
+
+                            <option value="June" <%=financialSpourse.paymentMonth==='June' ? 'selected' : '' %> >June
+                            </option>
+                            <option value="July" <%=financialSpourse.paymentMonth==='July' ? 'selected' : '' %> >July
+                            </option>
+                            <option value="August" <%=financialSpourse.paymentMonth==='August' ? 'selected' : '' %>
+                                >August</option>
+
+                            <option value="September" <%=financialSpourse.paymentMonth==='September' ? 'selected' : ''
+                                %> >September</option>
+                            <option value="October" <%=financialSpourse.paymentMonth==='October' ? 'selected' : '' %>
+                                >October</option>
+                            <option value="November" <%=financialSpourse.paymentMonth==='November' ? 'selected' : '' %>
+                                >November</option>
+                            <option value="December" <%=financialSpourse.paymentMonth==='December' ? 'selected' : '' %>
+                                >December</option>
+
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentYear">Payment Year</label>
+
+                        <select name="paymentYear">
+
+                            <option value=""> Select Financial Year </option>
+
+                            <% allFinancialYear.forEach((year)=>{ %>
+
+                                <option value="<%=year.Year%>" <%=financialSpourse.paymentYear===year.Year? 'selected'
+                                    : '' %> >
+                                    <%=year.Year%>
+                                </option>
+
+                                <% })%>
+
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="feesAmount">Monthly Fees Amount (Rs)</label>
+                    <select name="paymentAmount" required>
+                        <option value="">Select Amount</option>
+                        <option value="30" <%=financialSpourse.paymentAmount==='30' ? 'selected' : '' %>>30</option>
+                        <option value="40" <%=financialSpourse.paymentAmount==='40' ? 'selected' : '' %> >40</option>
+                        <option value="50" <%=financialSpourse.paymentAmount==='50' ? 'selected' : '' %> >50</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentDate">Payment Date</label>
+                    <input type="date" name="paymentDate" required id="paymentDate"
+                        value="<%=financialSpourse.paymentDate%>">
+                </div>
+
+                <div class="fees-section">
+                    <div class="fees-title">Payment Information</div>
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="">Select Method</option>
+                            <option value="qr_code" <%=financialSpourse.paymentMethod==='qr_code' ? 'selected' : '' %>
+                                >QR Code</option>
+                            <option value="bank_transfer" <%=financialSpourse.paymentMethod==='bank_transfer'
+                                ? 'selected' : '' %> > Bank Transfer</option>
+                            <option value="cash" <%=financialSpourse.paymentMethod==='cash' ? 'selected' : '' %> >Cash
+                            </option>
+                        </select>
+                    </div>
+
+                    <div id="qrCodeSection" class="payment-method"
+                        style=" display : <%=financialSpourse.paymentMethod==='qr_code' ? 'block' : 'none' %>">
+                        <p>Scan the QR code below to make payment</p>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://example.com/pay"
+                            alt="QR Code" class="qr-code">
+                        <p class="text-muted">Upload the payment confirmation screenshot</p>
+                        <input type="file" name="qrProof" accept="image/*">
+                    </div>
+
+                    <div id="bankTransferSection" class="payment-method" style="display: <%=financialSpourse.paymentMethod==='bank_transfer' ? 'block' : 'none' %>">
+                        <div class="bank-details">
+                            <h6>Bank Name: The Brighat Star Academy</h6>
+                            <h6>Account Number: 88987676456</h6>
+                            <h6>IFSC Code: SBIN00998787</h6>
+                        </div>
+                        <p class="text-muted">Upload the payment confirmation screenshot</p>
+                        <input type="file" name="bankProof" accept="image/*">
+                    </div>
+
+                    <div id="cashSection" class="payment-method" style="display: <%=financialSpourse.paymentMethod==='cash' ? 'block' : 'none' %>;">
+                        <p class="text-muted">Provide the receipt after cash payment</p>
+                        <input type="text" name="receiptNumber" placeholder="Enter receipt number">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">Submit</button>
+                    <a href="/DPS/all-member" class="back-btn">Back</a>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            // Show current year in Payment Year field
+
+            // Payment method switcher
+            document.getElementById("paymentMethod").addEventListener("change", function () {
+                const value = this.value;
+                document.getElementById("qrCodeSection").style.display = "none";
+                document.getElementById("bankTransferSection").style.display = "none";
+                document.getElementById("cashSection").style.display = "none";
+
+                if (value === "qr_code") {
+                    document.getElementById("qrCodeSection").style.display = "block";
+                } else if (value === "bank_transfer") {
+                    document.getElementById("bankTransferSection").style.display = "block";
+                } else if (value === "cash") {
+                    document.getElementById("cashSection").style.display = "block";
+                }
+            });
+
+
+        </script>
+    </body>
+
+</html>

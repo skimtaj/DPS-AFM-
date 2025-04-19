@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%-include('common_header', {admin : adminSourse})%>
+
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin - Message Replies</title>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+        <style>
+            :root {
+                --primary-color: #4a6fa5;
+                --secondary-color: #166088;
+                --light-color: #f8f9fa;
+                --dark-color: #343a40;
+                --success-color: #28a745;
+                --error-color: #dc3545;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                background-color: #f5f5f5;
+                color: var(--dark-color);
+                line-height: 1.6;
+            }
+
+            .container {
+                max-width: 1000px;
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            h1 {
+                color: var(--primary-color);
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            .message-list {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+
+            .message-card {
+                border: 1px solid #eee;
+                border-radius: 6px;
+                padding: 15px;
+                margin-bottom: 15px;
+                background: #fafafa;
+            }
+
+            .message-card h3 {
+                color: var(--secondary-color);
+                margin-bottom: 10px;
+            }
+
+            .message-card p {
+                margin-bottom: 10px;
+            }
+
+            .message-meta {
+                font-size: 14px;
+                color: #666;
+            }
+
+            .reply-form {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 600;
+                color: var(--secondary-color);
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            textarea.form-control {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            .submit-btn {
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .submit-btn:hover {
+                background-color: var(--secondary-color);
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 10px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1> Message Replies</h1>
+
+
+
+
+            <script>
+                <% if (messages.success) { %>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: "<%= messages.success %>",
+                        confirmButtonColor: '#3085d6'
+                    });
+                <% } %>
+            
+                <% if (messages.error) { %>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: "<%= messages.error %>",
+                        confirmButtonColor: '#d33'
+                    });
+                <% } %>
+
+            </script>
+
+
+            <div class="message-list">
+                <div class="message-card">
+                    <h3>
+                        Name : <%=enquirySourse.Name%>
+                    </h3>
+
+                    <p>
+                        Enquiry : <%=enquirySourse.Message%>
+                    </p>
+
+                    <div class="reply-form">
+                        <form method="post">
+
+
+                            <div class="form-group">
+                                <label for="replyMessage"> Email</label>
+                                <input id="email" class="form-control" placeholder="Email" name="Email"
+                                    value="<%=enquirySourse.Email%>" disabled></input>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="replyMessage">Admin Reply</label>
+                                <textarea id="replyMessage" class="form-control" placeholder="Type your reply..."
+                                    name="Reply"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn" onclick="replySend()">Send Reply</button>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </body>
+
+    <script>
+
+const replySend = () => {
+
+            document.getElementById('email').disabled = false;
+
+        }
+
+    </script>
+
+</html>

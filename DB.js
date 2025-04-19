@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const mongourl = 'mongodb+srv://imtajdatabase:Skimtaj786@tbsa.p382p.mongodb.net/'
+const mongourl = 'mongodb+srv://imtajdatabase:Skimtaj786@dps-afm.scb6ix9.mongodb.net/'
 
 //const mongourl = 'mongodb://localhost:27017/afm-project';
 

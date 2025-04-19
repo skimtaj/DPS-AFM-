@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%-include('common_header', {admin : adminSourse})%>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Admin Dashboard | Notice Management</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+
+            :root {
+                --primaryColor: #4F46E5;
+                --primaryLight: #6366F1;
+                --primaryLighter: #818CF8;
+                --primaryDark: #4338CA;
+                --secondaryColor: #10B981;
+                --dangerColor: #EF4444;
+                --warningColor: #F59E0B;
+                --infoColor: #3B82F6;
+                --whiteColor: #FFFFFF;
+                --lightGray: #F9FAFB;
+                --mediumGray: #E5E7EB;
+                --darkGray: #6B7280;
+                --textColor: #111827;
+                --borderColor: #D1D5DB;
+                --smallBorder: 8px;
+                --mediumBorder: 12px;
+                --bigBorder: 16px;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --fs13: 0.8125rem;
+                --fs14: 0.875rem;
+                --fs15: 0.9375rem;
+                --fs16: 1rem;
+                --fs18: 1.125rem;
+                --fs20: 1.25rem;
+                --fs24: 1.5rem;
+                --fs30: 1.875rem;
+                --fs36: 2.25rem;
+                --sidebarWidth: 280px;
+                --headerHeight: 70px;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                position: relative;
+                color: var(--textColor);
+                background-color: var(--lightGray);
+                min-height: 100vh;
+                overflow-x: hidden;
+                line-height: 1.5;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                line-height: 1.3;
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background-color: var(--lightGray);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background-color: var(--primaryLight);
+                border-radius: 3px;
+            }
+
+            .container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                padding: 1.5rem;
+            }
+
+            .data-table-section {
+                width: 100%;
+                padding: 1.5rem;
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .data-table-section .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .data-table-section .section-title {
+                font-size: var(--fs18);
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .data-table-section .section-actions {
+                display: flex;
+                gap: 0.75rem;
+            }
+
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: var(--fs14);
+            }
+
+            .table th {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+                padding: 1rem 1.25rem;
+                text-align: left;
+                font-weight: 500;
+                text-transform: uppercase;
+                font-size: var(--fs13);
+                letter-spacing: 0.5px;
+            }
+
+            .table td {
+                padding: 1rem 1.25rem;
+                border-bottom: 1px solid var(--borderColor);
+                vertical-align: middle;
+                color: var(--textColor);
+            }
+
+            .table tr:nth-child(even) {
+                background-color: var(--lightGray);
+            }
+
+            .table tr:hover {
+                background-color: rgba(79, 70, 229, 0.03);
+            }
+
+            .status-badge {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 50px;
+                font-size: var(--fs13);
+                font-weight: 500;
+            }
+
+            .status-active {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: var(--secondaryColor);
+            }
+
+            .status-pending {
+                background-color: rgba(245, 158, 11, 0.1);
+                color: var(--warningColor);
+            }
+
+            .status-inactive {
+                background-color: rgba(156, 163, 175, 0.1);
+                color: var(--darkGray);
+            }
+
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--smallBorder);
+                color: var(--darkGray);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                border: none;
+                background: transparent;
+            }
+
+            .action-btn:hover {
+                background-color: var(--lightGray);
+                color: var(--textColor);
+            }
+
+            .action-btn.edit {
+                color: var(--infoColor);
+            }
+
+            .action-btn.delete {
+                color: var(--dangerColor);
+            }
+
+            .dataTables_wrapper {
+                width: 100%;
+            }
+
+            .dataTables_wrapper .dataTables_filter {
+                margin-bottom: 1rem;
+            }
+
+            .dataTables_wrapper .dataTables_filter input {
+                padding: 0.5rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                margin-left: 0.5rem;
+                font-size: var(--fs14);
+                transition: all 0.2s ease;
+            }
+
+            .dataTables_wrapper .dataTables_filter input:focus {
+                border-color: var(--primaryLight);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+            }
+
+            .dataTables_wrapper .dataTables_paginate {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.25rem;
+                flex-wrap: nowrap;
+                border-top: 1px solid var(--borderColor);
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+                min-width: 32px;
+                height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 0.5rem;
+                border-radius: var(--smallBorder);
+                border: 1px solid var(--borderColor);
+                color: var(--textColor);
+                font-size: var(--fs14);
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background-color: var(--lightGray);
+                border-color: var(--mediumGray);
+                color: var(--primaryColor);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background-color: var(--primaryColor);
+                border-color: var(--primaryColor);
+                color: var(--whiteColor);
+                font-weight: 600;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+
+            .dataTables_wrapper .dataTables_info {
+                font-size: var(--fs14);
+                color: var(--darkGray);
+                padding-top: 1rem;
+            }
+
+            .notification-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                width: 18px;
+                height: 18px;
+                background-color: var(--dangerColor);
+                color: white;
+                border-radius: 50%;
+                font-size: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+            }
+
+            .tooltip-inner {
+                font-size: var(--fs13);
+                padding: 0.375rem 0.75rem;
+                background-color: var(--textColor);
+            }
+
+            .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+            .bs-tooltip-top .tooltip-arrow::before {
+                border-top-color: var(--textColor);
+            }
+
+            .add-new-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.625rem 1.25rem;
+                background-color: var(--secondaryColor);
+                color: white;
+                border: none;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .add-new-btn:hover {
+                background-color: #0e9f72;
+                transform: translateY(-1px);
+                box-shadow: var(--shadow);
+            }
+
+            .export-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                border-radius: var(--smallBorder);
+                background-color: white;
+                color: var(--darkGray);
+                border: 1px solid var(--borderColor);
+                transition: all 0.2s ease;
+                cursor: pointer;
+            }
+
+            .export-btn:hover {
+                background-color: var(--lightGray);
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-sm);
+            }
+
+            .export-btn.excel:hover {
+                color: #1d6f42;
+                border-color: #1d6f42;
+            }
+
+            .export-btn.pdf:hover {
+                color: #e74c3c;
+                border-color: #e74c3c;
+            }
+
+            .modal-content {
+                border: none;
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .modal-header {
+                border-bottom: 1px solid var(--borderColor);
+                padding: 1.25rem 1.5rem;
+            }
+
+            .modal-title {
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .modal-footer {
+                border-top: 1px solid var(--borderColor);
+                padding: 1rem 1.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.25rem;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                color: var(--textColor);
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 0.75rem 1rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                transition: all 0.2s ease;
+            }
+
+            .form-control:focus {
+                border-color: var(--primaryLight);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            textarea.form-control {
+                min-height: 120px;
+                resize: vertical;
+            }
+
+            .file-upload-wrapper {
+                position: relative;
+                margin-bottom: 1.25rem;
+            }
+
+            .file-upload-label {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1.5rem;
+                border: 2px dashed var(--borderColor);
+                border-radius: var(--smallBorder);
+                background-color: var(--lightGray);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-align: center;
+            }
+
+            .file-upload-label:hover {
+                border-color: var(--primaryLight);
+                background-color: rgba(79, 70, 229, 0.05);
+            }
+
+            .file-upload-label i {
+                font-size: 2rem;
+                color: var(--primaryLight);
+                margin-bottom: 0.5rem;
+            }
+
+            .file-upload-label span {
+                display: block;
+                font-size: var(--fs14);
+                color: var(--darkGray);
+            }
+
+            .file-upload-input {
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+            }
+
+            .file-name {
+                margin-top: 0.5rem;
+                font-size: var(--fs13);
+                color: var(--darkGray);
+            }
+
+            .btn {
+                padding: 0.625rem 1.25rem;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+            }
+
+            .btn-primary {
+                background-color: var(--primaryColor);
+                color: white;
+            }
+
+            .btn-primary:hover {
+                background-color: var(--primaryDark);
+            }
+
+            .btn-secondary {
+                background-color: var(--mediumGray);
+                color: var(--textColor);
+            }
+
+            .btn-secondary:hover {
+                background-color: var(--borderColor);
+            }
+
+            @media (min-width: 992px) {
+                .container {
+                    padding: 2rem;
+                }
+
+                .main {
+                    grid-template-columns: repeat(12, 1fr);
+                    grid-auto-rows: minmax(150px, auto);
+                    gap: 1.5rem;
+                }
+
+                .data-table-section {
+                    grid-column: span 12;
+                }
+            }
+
+            @media (min-width: 1200px) {
+                .container {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                }
+            }
+
+            @media (max-width: 575.98px) {
+                html {
+                    font-size: 14px;
+                }
+
+                .container {
+                    padding: 1rem;
+                }
+
+                .main {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .box,
+                .data-table-section,
+                .member-form-section {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-right: 0;
+                    padding: 1rem;
+                }
+
+                .table th,
+                .table td {
+                    padding: 0.75rem;
+                    font-size: var(--fs13);
+                }
+
+                .dataTables_wrapper .dataTables_length,
+                .dataTables_wrapper .dataTables_filter {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                }
+
+                .dataTables_wrapper .dataTables_filter input {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-top: 0.5rem;
+                }
+
+                .dataTables_wrapper .dataTables_paginate {
+                    gap: 0.125rem;
+                }
+
+                .dataTables_wrapper .dataTables_paginate .paginate_button {
+                    min-width: 28px;
+                    height: 28px;
+                    font-size: var(--fs13);
+                    padding: 0 0.25rem;
+                }
+
+                .filter-controls {
+                    flex-direction: column;
+                    gap: 0.75rem;
+                }
+
+                .filter-group {
+                    min-width: 100%;
+                }
+
+                .modal-dialog {
+                    margin: 0.5rem auto;
+                }
+
+                .modal-content {
+                    border-radius: 0;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container" id="top">
+            <main class="content">
+                <section class="main">
+                    <script>
+                        <% if (messages.success) { %>
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: "<%= messages.success %>",
+                                confirmButtonColor: '#3085d6'
+                            });
+                        <% } %>
+                    
+                        <% if (messages.error) { %>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: "<%= messages.error %>",
+                                confirmButtonColor: '#d33'
+                            });
+                        <% } %>
+                    </script>
+
+                    <div class="data-table-section fade-in" style="animation-delay: 0.2s;">
+                        <div class="section-header">
+                            <h3 class="section-title">Notice List</h3>
+                            <div class="section-actions">
+                                <button class="add-new-btn" data-toggle="modal" data-target="#addNoticeModal">
+                                    <i class="fas fa-plus-circle"></i> Add New
+                                </button>
+                                <button class="export-btn excel" title="Export to Excel">
+                                    <i class="fas fa-file-excel"></i>
+                                </button>
+                                <button class="export-btn pdf" title="Export to PDF">
+                                    <i class="fas fa-file-pdf"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="membersTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sl No</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>File Attached</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <% allNotice.forEach((notice, index)=>{ %>
+
+                                        <tr>
+                                            <td>
+                                                <%=index+1%>
+
+                                            </td>
+
+                                            <td>
+                                                <%=notice.Title%>
+
+                                            </td>
+
+                                            <td>
+                                                <%=notice.Description%>
+
+                                            </td>
+
+                                            <td>
+                                                <a href="/download-notice/<%=notice._id%>"
+                                                    class="btn btn-primary btn-sm" href="#" role="button">Download</a>
+                                            </td>
+
+                                            <td>
+                                                <a href="#" role="button"> <i class="fa-solid fa-pen-to-square"></i></a>
+
+                                                <a href="#" role="button" onclick="deleteNotice('<%=notice._id%>')"> <i
+                                                        class="fa-solid fa-trash"></i>
+
+                                                    <script>
+
+                                             const deleteNotice = (id) => {
+
+                                                            Swal.fire({
+                                                                title: "Are you sure?",
+                                                                text: "You won't be able to revert this!",
+                                                                icon: "warning",
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: "#3085d6",
+                                                                cancelButtonColor: "#d33",
+                                                                confirmButtonText: "Yes, delete it!"
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+
+                                                                    window.location.href = `/delete-notice/${id}`
+
+                                                                }
+                                                            });
+                                                        }
+
+                                                    </script>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <% })%>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div class="modal fade" id="addNoticeModal" tabindex="-1" aria-labelledby="addNoticeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addNoticeModalLabel">Add New Notice</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="noticeForm" method="post" action="/DPS/add-notice" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="noticeTitle">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="noticeTitle"
+                                    placeholder="Enter notice title" required name="Title">
+                            </div>
+                            <div class="form-group">
+                                <label for="noticeDescription">Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="noticeDescription" rows="5"
+                                    placeholder="Enter notice description" required name="Description"></textarea>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Attach File</label>
+                                <div class="file-upload-wrapper">
+                                    <label for="noticeFile" class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Click to upload or drag and drop</span>
+                                        <span>PDF, DOC, JPG, PNG (Max. 5MB)</span>
+                                        <input type="file" id="noticeFile" class="file-upload-input"
+                                            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" name="attcahFile">
+                                    </label>
+                                    <div id="fileName" class="file-name"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="noticeDescription">Date <span class="text-danger">*</span></label>
+                                <input class="form-control" id="noticeDescription" rows="5" type='date'
+                                    placeholder="Enter notice description" required name="Date"></input>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Notice</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#membersTable').DataTable({
+                    responsive: true,
+                    paging: true,
+                    searching: true,
+                    info: true,
+                    autoWidth: false,
+                    lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    dom: '<"top"lf>rt<"bottom"ip>',
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search notices...",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoEmpty: "Showing 0 to 0 of 0 entries",
+                        infoFiltered: "(filtered from _MAX_ total entries)",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "Next",
+                            previous: "Previous"
+                        }
+                    }
+                });
+
+                $('[data-toggle="tooltip"]').tooltip();
+
+                $('#noticeFile').change(function () {
+                    const file = this.files[0];
+                    if (file) {
+                        $('#fileName').text('Selected file: ' + file.name);
+                    } else {
+                        $('#fileName').text('');
+                    }
+                });
+
+
+
+
+            });
+
+
+
+
+
+        </script>
+    </body>
+
+</html>

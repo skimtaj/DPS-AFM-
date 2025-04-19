@@ -1,12 +1,10 @@
-
 const express = require('express');
-const multer = require('multer');
 const route = express.Router();
-const auth = require('../auth/admin_dashboard_auth');
 const path = require('path')
+const multer = require('multer');
+const auth = require('../auth/admin_auth')
 
 route.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 const storage = multer.diskStorage({
     limits: { fileSize: 10000000 },
     destination: function (req, file, cb) {
@@ -22,120 +20,78 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+const { deleteNotice, downloadNotice, addNoticePost, adminAccount, addNotice, deleteRefund, rejectRefundRequest, refundDownlodProof, adminRefundPost, adminRefund, downloadPaymentProof, donationRecordpdf, donationRecordExcel, userVerification, editDonation, deleteDonation, deleteFinancialYear, addFinancial, financialYear, memberProfile, newDonationPost, newDonation, editMemberPost, deleteacAdemicYear, academicYearPost, academicYear, newMember, editMember, deleteMember, newMemberPost, allMember, reqplyEnquiryPost, reqplyEnquiry, adminDashboard, adminLoginPost, adminSignup, adminLogin } = require('../controllers/admin_controllers');
+
+route.get('/DPS/admin-login', adminLogin);
+route.post('/DPS/admin-login', adminLoginPost);
+
+route.post('/DPS/admin-signup', upload.single('Profile_Image'), adminSignup);
+
+route.get('/DPS/admin-dashboard', auth, adminDashboard);
+
+route.get('/DPS/admin-dashboard/reply-enquiry/:id', auth, reqplyEnquiry)
+route.post('/DPS/admin-dashboard/reply-enquiry/:id', auth, reqplyEnquiryPost)
+
+route.get('/DPS/all-member', auth, allMember)
+
+route.get('/delete-member/:memberid', deleteMember)
+
+route.get('/DPS/new-member', auth, newMember)
+route.post('/DPS/new-member', upload.single('Profile_Image'), newMemberPost)
+
+route.get('/edit-member/:memberid', auth, editMember)
+
+route.post('/edit-member/:memberid', upload.single('Profile_Image'), auth, editMemberPost)
+
+route.get('/DPS/academic-year', auth, academicYear)
+route.post('/DPS/academic-year/new-academic-year', academicYearPost)
+
+route.get('/delete-academic-year/:id', deleteacAdemicYear);
+
+route.get('/DPS/new-donation/:memberid', auth, newDonation)
+
+const cpUpload = upload.fields([{ name: 'qrProof', maxCount: 1 }, { name: 'bankProof', maxCount: 8 }])
+
+route.post('/DPS/new-donation/:memberid', auth, cpUpload, newDonationPost)
+
+route.get('/dps/member-profile/:memberid', auth, memberProfile)
+
+route.get('/DPS/financial-year', auth, financialYear)
+
+route.post('/DPS/add-financial', addFinancial)
+
+route.get('/delete-financial-year/:id', deleteFinancialYear);
+
+route.get('/delete-donate/:donationid', deleteDonation)
+
+route.get('/edit-donation/:id', auth, editDonation)
+
+route.get('/DPS/verify/:id', userVerification)
+
+route.get('/donation-record-excel/:memberid', donationRecordExcel)
+
+route.get('/donation-record/:memberid', donationRecordpdf)
+
+route.get('/download-refund-payment-proof/:refundid', downloadPaymentProof)
+
+route.get('/DPS/admin-dashboard/refund/:id', auth, adminRefund)
+
+route.post('/DPS/admin-dashboard/refund/:id', auth, upload.single('proofDocument'), adminRefundPost)
+
+route.get('/download-refund-proof/:id', refundDownlodProof)
+
+route.get('/reject-refund-request/:id', rejectRefundRequest)
+
+route.get('/delete-refund/:id', deleteRefund)
+
+route.get('/DPS/notice', auth, addNotice)
+
+route.get('/download-notice/:id', downloadNotice);
+route.get('/delete-notice/:id', deleteNotice)
 
 
-const { studentDueAmount, testing, resetPasswordPost, resetPassword, forgetPasswordPost, forgetPassword, logout, cashPaymentReceipt, downloadResult, studentQRProof, downloadStudentBankProof, downloadReceipt, deleteFeesrecord, downloadBankProof, downloadQRProof, editFeesPost, editFees, feesCollectPost, feesCollect, feesCollection, admissionVerification, studentProfile, deleteStudent, editStudentPost, editStudent, addStudentPost, addStudent, editFeesTypePost, editFeesType, addfeesTypePost, addfeesType, addAcademicYearPost, addAcademicYear, teacherAttendancePost, teacherAttendance, editClassPost, editClass, deleteSubject, editSubjectPost, editSubject, addSubjectPost, addSubject, addClassPost, addClass, addSectionPost, addSection, downloadTeacherIdcard, downloadTeacherExcel, teacherProfile, editTecaherPost, editTecaher, deleteTeacher, addTeacherPost, addTeacher, deleteGeneralEnquiry, adminDashboard, replyGeneralQuiryPost, replyGeneralQuiry } = require('../controllers/admin_controllers')
-
-route.get('/TBSA/admin-dashboard', auth, adminDashboard)
-
-route.get('/reply-general-quiry/:id', replyGeneralQuiry)
-route.post('/reply-general-quiry/:id', replyGeneralQuiryPost)
-
-route.get('/delete-general-enquiry/:id', deleteGeneralEnquiry)
-
-route.get('/TBSA/admin-dashboard/add-teacher', auth, addTeacher)
-route.post('/TBSA/admin-dashboard/add-teacher', auth, upload.single('Profile_Image'), addTeacherPost);
-
-route.get('/delete-teacher/:id', deleteTeacher)
-
-route.get('/edit-teacher/:id', editTecaher)
-route.post('/edit-teacher/:id', upload.single('Profile_Image'), editTecaherPost)
-
-route.get('/teacher-profile/:id', teacherProfile)
-
-route.get('/download-teacher-excel', downloadTeacherExcel)
-
-route.get('/download/teacher-idcard/:id', downloadTeacherIdcard)
-
-route.get('/TBSA/admin-dashboard/add-section', auth, addSection)
-route.post('/TBSA/admin-dashboard/add-section', auth, addSectionPost)
-
-route.get('/TBSA/admin-dashboard/add-class', auth, addClass)
-route.post('/TBSA/admin-dashboard/add-class', auth, addClassPost)
-
-route.get('/TBSA/admin-dashboard/add-subject', auth, addSubject)
-route.post('/TBSA/admin-dashboard/add-subject', auth, addSubjectPost)
+route.post('/DPS/add-notice', auth, upload.single('attcahFile'), addNoticePost)
 
 
-route.get('/edit-subject/:id', editSubject);
-route.post('/edit-subject/:id', editSubjectPost);
-
-route.get('/delete-subject/:id', deleteSubject)
-
-route.get('/edit-class/:id', editClass)
-route.post('/edit-class/:id', editClassPost)
-
-route.get('/teacher-attendance/:id', teacherAttendance)
-route.post('/teacher-attendance/:id', teacherAttendancePost)
-
-route.get('/TBSA/admin-dashboard/add-academic-year', auth, addAcademicYear)
-route.post('/TBSA/admin-dashboard/add-academic-year', auth, addAcademicYearPost)
-
-route.get('/TBSA/admin-dashboard/add-fees-type', auth, addfeesType)
-route.post('/TBSA/admin-dashboard/add-fees-type', auth, addfeesTypePost);
-
-route.get('/edit-fees-type/:id', editFeesType)
-route.post('/edit-fees-type/:id', editFeesTypePost)
-
-const cpUpload = upload.fields([{ name: 'Profile_Image', maxCount: 1 }, { name: 'bankTransferProof', maxCount: 8 }, { name: 'qrPaymentProof', maxCount: 8 }, { name: 'PreviousResult', maxCount: 8 }])
-
-
-route.get('/TBSA/admin-dashboard/add-student', auth, addStudent);
-route.post('/TBSA/admin-dashboard/add-student', auth, cpUpload, addStudentPost);
-
-
-const cpUploads = upload.fields([{ name: 'Profile_Image', maxCount: 1 }, { name: 'PreviousResult', maxCount: 8 }, { name: 'bankTransferProof', maxCount: 8 }, { name: 'qrPaymentProof', maxCount: 8 }])
-
-
-route.get('/edit-student/:id', editStudent)
-route.post('/edit-student/:id', cpUploads, editStudentPost)
-
-route.get('/delete-student/:id', deleteStudent);
-
-route.get('/student-profilr/:id', studentProfile)
-
-route.get('/admission-verification/:id', admissionVerification);
-
-route.get('/fees-collection/:id', feesCollection);
-
-route.get('/fees-collect/:id', feesCollect);
-
-const feesProof = upload.fields([{ name: 'bankPaymentProof', maxCount: 1 }, { name: 'QRcodePaymentProof', maxCount: 8 }])
-
-route.post('/fees-collect/:id', feesProof, feesCollectPost);
-
-route.get('/edit-fees/:id', editFees);
-
-const feesProofs = upload.fields([{ name: 'bankPaymentProof', maxCount: 1 }, { name: 'QRcodePaymentProof', maxCount: 8 }])
-
-route.post('/edit-fees/:id', feesProofs, editFeesPost);
-
-route.get('/download-QRCODE-proof/:id', downloadQRProof)
-route.get('/download-bankProof/:id', downloadBankProof)
-
-route.get('/delete-fees-record/:id', deleteFeesrecord)
-
-route.get('/download-receipt/:id', downloadReceipt)
-
-route.get('/studentBankproof/:id', downloadStudentBankProof);
-
-route.get('/student-QR-proof/:id', studentQRProof)
-
-route.get('/download-student-result/:id', downloadResult);
-
-route.post('/cash-payment-receipt/:id', cashPaymentReceipt);
-
-route.get('/logout', logout)
-
-route.get('/forget-password', forgetPassword)
-route.post('/forget-password', forgetPasswordPost)
-
-route.get('/reset-pasword/:id', resetPassword)
-route.post('/reset-pasword/:id', resetPasswordPost)
-
-
-
-route.get('/student-due-amount/:id', studentDueAmount)
-
-route.get('/testing', testing)
-module.exports = route;
+route.get('/DPS/admin-account', auth, adminAccount)
+module.exports = route; 

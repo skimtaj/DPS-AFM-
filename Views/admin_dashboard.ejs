@@ -1,881 +1,1336 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<%-include('common_header', {admin : adminSourse})%>
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Admin Dashboard </title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-    <link rel="stylesheet" href="/Style/admin_dashboard.css">
-
-
-</head>
-
-<body>
-
-
-    <script>
-
-<% if (messages.success) { %>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: "<%= messages.success %>",
-                confirmButtonColor: '#3085d6'
-            });
-                <% } %>
-            
-                <% if (messages.error) { %>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: "<%= messages.error %>",
-                confirmButtonColor: '#d33'
-            });
-                <% } %>
-
-    </script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+
+            :root {
+                --primaryColor: #4F46E5;
+                --primaryLight: #6366F1;
+                --primaryLighter: #818CF8;
+                --primaryDark: #4338CA;
+                --secondaryColor: #10B981;
+                --dangerColor: #EF4444;
+                --warningColor: #F59E0B;
+                --infoColor: #3B82F6;
+                --whiteColor: #FFFFFF;
+                --lightGray: #F9FAFB;
+                --mediumGray: #E5E7EB;
+                --darkGray: #6B7280;
+                --textColor: #111827;
+                --borderColor: #D1D5DB;
+                --smallBorder: 8px;
+                --mediumBorder: 12px;
+                --bigBorder: 16px;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --fs13: 0.8125rem;
+                --fs14: 0.875rem;
+                --fs15: 0.9375rem;
+                --fs16: 1rem;
+                --fs18: 1.125rem;
+                --fs20: 1.25rem;
+                --fs24: 1.5rem;
+                --fs30: 1.875rem;
+                --fs36: 2.25rem;
+                --sidebarWidth: 280px;
+                --headerHeight: 70px;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                position: relative;
+                color: var(--textColor);
+                background-color: var(--lightGray);
+                min-height: 100vh;
+                overflow-x: hidden;
+                line-height: 1.5;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                line-height: 1.3;
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background-color: var(--lightGray);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background-color: var(--primaryLight);
+                border-radius: 3px;
+            }
+
+            .container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                padding: 1.5rem;
+            }
+
+            .main {
+                display: grid;
+                gap: 1.5rem;
+                width: 100%;
+            }
+
+            .main .box {
+                padding: 1.5rem;
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .box-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .box-title {
+                font-size: var(--fs18);
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .box-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .box-action-btn {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--smallBorder);
+                background-color: var(--lightGray);
+                color: var(--darkGray);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                font-size: var(--fs14);
+            }
+
+            .box-action-btn:hover {
+                background-color: var(--mediumGray);
+                color: var(--textColor);
+            }
+
+            .welcome-box {
+                padding: 2rem;
+                display: flex;
+                flex-direction: column;
+                background: linear-gradient(135deg, var(--primaryColor) 0%, var(--primaryLight) 100%);
+                color: var(--whiteColor);
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .welcome-box::before {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 200px;
+                height: 200px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                z-index: 1;
+            }
+
+            .welcome-box::after {
+                content: '';
+                position: absolute;
+                bottom: -80px;
+                right: -80px;
+                width: 250px;
+                height: 250px;
+                background-color: rgba(255, 255, 255, 0.05);
+                border-radius: 50%;
+                z-index: 1;
+            }
+
+            .welcome-box .box-title {
+                color: var(--whiteColor);
+                font-size: var(--fs24);
+                margin-bottom: 0.5rem;
+            }
+
+            .welcome-box .box-text {
+                font-size: var(--fs16);
+                margin-bottom: 1.5rem;
+                line-height: 1.6;
+                opacity: 0.9;
+                max-width: 600px;
+            }
+
+            .welcome-box .box-btn {
+                text-transform: capitalize;
+                font-size: var(--fs14);
+                font-weight: 500;
+                color: var(--primaryColor);
+                background-color: var(--whiteColor);
+                border-radius: var(--smallBorder);
+                padding: 0.625rem 1.5rem;
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                box-shadow: var(--shadow-sm);
+                border: none;
+                outline: none;
+                position: relative;
+                z-index: 2;
+            }
+
+            .welcome-box .box-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .stats-box {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: space-between;
+                min-height: 140px;
+                padding: 1.5rem;
+                border-left: 4px solid var(--primaryColor);
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                width: 100%;
+            }
+
+            .stats-box:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .stats-box::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 80px;
+                height: 80px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                transform: translate(30%, -30%);
+            }
+
+            .stats-box .stats-value {
+                font-size: var(--fs30);
+                font-weight: 700;
+                margin-bottom: 0.25rem;
+                color: var(--textColor);
+            }
+
+            .stats-box .stats-label {
+                text-transform: uppercase;
+                font-size: var(--fs13);
+                font-weight: 500;
+                color: var(--darkGray);
+                letter-spacing: 0.5px;
+                display: block;
+            }
+
+            .stats-box .stats-icon {
+                font-size: 2.5rem;
+                color: var(--primaryColor);
+                opacity: 0.8;
+                margin-top: 0.5rem;
+                align-self: flex-end;
+            }
+
+            .stats-box.trend-up .stats-value {
+                color: var(--secondaryColor);
+            }
+
+            .stats-box.trend-down .stats-value {
+                color: var(--dangerColor);
+            }
+
+            .stats-box.secondary {
+                border-left-color: var(--secondaryColor);
+            }
+
+            .stats-box.secondary .stats-icon {
+                color: var(--secondaryColor);
+            }
+
+            .stats-box.danger {
+                border-left-color: var(--dangerColor);
+            }
+
+            .stats-box.danger .stats-icon {
+                color: var(--dangerColor);
+            }
+
+            .stats-box.warning {
+                border-left-color: var(--warningColor);
+            }
+
+            .stats-box.warning .stats-icon {
+                color: var(--warningColor);
+            }
+
+            .trend-indicator {
+                display: inline-flex;
+                align-items: center;
+                font-size: var(--fs13);
+                font-weight: 500;
+                padding: 0.25rem 0.5rem;
+                border-radius: var(--smallBorder);
+                margin-left: 0.5rem;
+            }
+
+            .trend-up {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: var(--secondaryColor);
+            }
+
+            .trend-down {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: var(--dangerColor);
+            }
+
+            .trend-neutral {
+                background-color: rgba(156, 163, 175, 0.1);
+                color: var(--darkGray);
+            }
+
+            .data-table-section {
+                width: 100%;
+                padding: 1.5rem;
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .data-table-section .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .data-table-section .section-title {
+                font-size: var(--fs18);
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .data-table-section .section-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .filter-controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background-color: var(--lightGray);
+                border-radius: var(--smallBorder);
+            }
+
+            .filter-group {
+                display: flex;
+                flex-direction: column;
+                min-width: 200px;
+                flex-grow: 1;
+            }
+
+            .filter-label {
+                font-size: var(--fs13);
+                font-weight: 500;
+                color: var(--darkGray);
+                margin-bottom: 0.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .filter-select {
+                padding: 0.625rem 1rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                color: var(--textColor);
+                background-color: var(--whiteColor);
+                transition: all 0.2s ease;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 0.75rem center;
+                background-size: 1rem;
+            }
+
+            .filter-select:focus {
+                outline: none;
+                border-color: var(--primaryLight);
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .filter-actions {
+                display: flex;
+                align-items: flex-end;
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.625rem 1.25rem;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .filter-btn.apply {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+            }
+
+            .filter-btn.apply:hover {
+                background-color: var(--primaryDark);
+            }
+
+            .filter-btn.reset {
+                background-color: var(--lightGray);
+                color: var(--darkGray);
+            }
+
+            .filter-btn.reset:hover {
+                background-color: var(--mediumGray);
+            }
+
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: var(--fs14);
+            }
+
+            .table th {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+                padding: 1rem 1.25rem;
+                text-align: left;
+                font-weight: 500;
+                text-transform: uppercase;
+                font-size: var(--fs13);
+                letter-spacing: 0.5px;
+            }
+
+            .table td {
+                padding: 1rem 1.25rem;
+                border-bottom: 1px solid var(--borderColor);
+                vertical-align: middle;
+                color: var(--textColor);
+            }
+
+            .table tr:nth-child(even) {
+                background-color: var(--lightGray);
+            }
+
+            .table tr:hover {
+                background-color: rgba(79, 70, 229, 0.03);
+            }
+
+            .status-badge {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 50px;
+                font-size: var(--fs13);
+                font-weight: 500;
+            }
+
+            .status-active {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: var(--secondaryColor);
+            }
+
+            .status-pending {
+                background-color: rgba(245, 158, 11, 0.1);
+                color: var(--warningColor);
+            }
+
+            .status-inactive {
+                background-color: rgba(156, 163, 175, 0.1);
+                color: var(--darkGray);
+            }
+
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--smallBorder);
+                color: var(--darkGray);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                border: none;
+                background: transparent;
+            }
+
+            .action-btn:hover {
+                background-color: var(--lightGray);
+                color: var(--textColor);
+            }
+
+            .action-btn.edit {
+                color: var(--infoColor);
+            }
+
+            .action-btn.delete {
+                color: var(--dangerColor);
+            }
+
+            .scroll-top {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 99;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                box-shadow: var(--shadow-md);
+                border: none;
+                outline: none;
+            }
+
+            .scroll-top.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .scroll-top:hover {
+                background-color: var(--primaryDark);
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .scroll-top i {
+                font-size: 1.25rem;
+            }
+
+            .dataTables_wrapper {
+                width: 100%;
+            }
+
+            .dataTables_wrapper .dataTables_filter {
+                margin-bottom: 1rem;
+            }
+
+            .dataTables_wrapper .dataTables_filter input {
+                padding: 0.5rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                margin-left: 0.5rem;
+                font-size: var(--fs14);
+                transition: all 0.2s ease;
+            }
+
+            .dataTables_wrapper .dataTables_filter input:focus {
+                border-color: var(--primaryLight);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+            }
+
+            .dataTables_wrapper .dataTables_paginate {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.25rem;
+                flex-wrap: nowrap;
+                border-top: 1px solid var(--borderColor);
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+                min-width: 32px;
+                height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 0.5rem;
+                border-radius: var(--smallBorder);
+                border: 1px solid var(--borderColor);
+                color: var(--textColor);
+                font-size: var(--fs14);
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background-color: var(--lightGray);
+                border-color: var(--mediumGray);
+                color: var(--primaryColor);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background-color: var(--primaryColor);
+                border-color: var(--primaryColor);
+                color: var(--whiteColor);
+                font-weight: 600;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+
+            .dataTables_wrapper .dataTables_info {
+                font-size: var(--fs14);
+                color: var(--darkGray);
+                padding-top: 1rem;
+            }
+
+            .notification-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                width: 18px;
+                height: 18px;
+                background-color: var(--dangerColor);
+                color: white;
+                border-radius: 50%;
+                font-size: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+            }
+
+            .tooltip-inner {
+                font-size: var(--fs13);
+                padding: 0.375rem 0.75rem;
+                background-color: var(--textColor);
+            }
+
+            .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+            .bs-tooltip-top .tooltip-arrow::before {
+                border-top-color: var(--textColor);
+            }
+
+            @media (min-width: 576px) {
+                .container {
+                    padding: 1.5rem;
+                }
+
+                .stats-box {
+                    flex-direction: row;
+                    align-items: center;
+                }
+
+                .stats-box .stats-icon {
+                    margin-top: 0;
+                    font-size: 3rem;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .main {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 1.5rem;
+                }
+
+                .welcome-box {
+                    grid-column: span 2;
+                }
+
+                .data-table-section {
+                    grid-column: span 2;
+                }
+            }
+
+            @media (min-width: 992px) {
+                .container {
+                    padding: 2rem;
+                }
+
+                .main {
+                    grid-template-columns: repeat(12, 1fr);
+                    grid-auto-rows: minmax(150px, auto);
+                    gap: 1.5rem;
+                }
+
+                .welcome-box {
+                    grid-column: span 12;
+                    grid-row: 1;
+                }
+
+                .stats-box {
+                    grid-column: span 3;
+                    grid-row: 2;
+                }
+
+                .data-table-section {
+                    grid-column: span 12;
+                    grid-row: 3;
+                }
+
+                .welcome-box::before {
+                    width: 300px;
+                    height: 300px;
+                    top: -100px;
+                    right: -100px;
+                }
+
+                .welcome-box::after {
+                    width: 400px;
+                    height: 400px;
+                    bottom: -150px;
+                    right: -150px;
+                }
+            }
+
+            @media (min-width: 1200px) {
+                .container {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                }
+            }
+
+            @media (max-width: 575.98px) {
+                html {
+                    font-size: 14px;
+                }
+
+                .container {
+                    padding: 1rem;
+                }
+
+                .main {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .box,
+                .welcome-box,
+                .data-table-section {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-right: 0;
+                    padding: 1rem;
+                }
+
+                .welcome-box {
+                    padding: 1.5rem;
+                }
+
+                .welcome-box .box-title {
+                    font-size: var(--fs20);
+                }
+
+                .welcome-box .box-text {
+                    font-size: var(--fs14);
+                }
+
+                .stats-box {
+                    min-height: 120px;
+                    padding: 1rem;
+                }
+
+                .stats-box .stats-value {
+                    font-size: var(--fs24);
+                }
+
+                .stats-box .stats-icon {
+                    font-size: 2rem;
+                }
+
+                .table th,
+                .table td {
+                    padding: 0.75rem;
+                    font-size: var(--fs13);
+                }
+
+                .dataTables_wrapper .dataTables_length,
+                .dataTables_wrapper .dataTables_filter {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                }
+
+                .dataTables_wrapper .dataTables_filter input {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-top: 0.5rem;
+                }
+
+                .dataTables_wrapper .dataTables_paginate {
+                    gap: 0.125rem;
+                }
+
+                .dataTables_wrapper .dataTables_paginate .paginate_button {
+                    min-width: 28px;
+                    height: 28px;
+                    font-size: var(--fs13);
+                    padding: 0 0.25rem;
+                }
+
+                .filter-controls {
+                    flex-direction: column;
+                    gap: 0.75rem;
+                }
+
+                .filter-group {
+                    min-width: 100%;
+                }
+            }
+
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .pulse {
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
 
 
-    <div class="container" id="top">
-        <aside class="sidebar-wrapper">
-            <div class="sidebar-header">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgtBtpjykqhF1cZq1A42q7XhNBhsXJbRiyNFYiKoDHnUqF6JzRrXGFSoXOIefQDdBGfKo1oXV-7X_lrIWpP3vOH6pPkMqq2HvtOBaPWJvgBpI-tAi2ULyfKMPbbpXvPWn5RqQjN2VjAfLSCAwdqq6ahxIw-7eKbx5Bt0WBHuS0pk2II6oGouDp0QIkxWicW/w640-h640/The_bright_star_academy-removebg-preview.png"
-                    alt="logo">
-                <h4>Admin Panel</h4>
-                <div class="close-menu">
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-            </div>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="#" onclick="dashboard()">
-                            <i class="fas fa-home"></i>
-                            <div class="title">dashboard</div>
-                        </a>
-                    </li>
+        <script>
+            <% if (messages.success) { %>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "<%= messages.success %>",
+                    confirmButtonColor: '#3085d6'
+                });
+            <% } %>
+        
+            <% if (messages.error) { %>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "<%= messages.error %>",
+                    confirmButtonColor: '#d33'
+                });
+            <% } %>
 
-                    <li class="has-submenu">
-                        <a href="#">
+        </script>
+
+
+
+        <div class="container" id="top">
+            <main class="content">
+                <section class="main">
+                    <div class="box welcome-box fade-in">
+                        <div class="box-left">
+                            <h3 class="box-title">Welcome back, Pauline!</h3>
+                            <p class="box-text">You have done 72% more sales compared to last month. Keep up the good
+                                work
+                                and check your new achievements in your profile.</p>
+                            <button class="box-btn">
+                                <i class="fas fa-trophy"></i> View Achievements
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box stats-box fade-in" style="animation-delay: 0.1s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value">
+                                <%=totalMember%>
+                            </h4>
+                            <span class="stats-label">Total Members</span>
+                        </div>
+                        <div class="stats-icon">
                             <i class="fas fa-users"></i>
-                            <div class="title">Student Info</div>
-                            <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </a>
-                        <ul class="submenu">
-                            <li><a href="#" onclick="allStudents()"><i class="fa-solid fa-right-long"></i> Student
-                                    Details</a></li>
-                            <li><a href="/TBSA/admin-dashboard/add-student"><i class="fa-solid fa-right-long"></i>
-                                    Student Admission</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu">
-                        <a href="#">
-                            <i class="fa-solid fa-chalkboard-user"></i>
-                            <div class="title">Teacher Info</div>
-                            <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </a>
-                        <ul class="submenu">
-                            <li><a href="#" onclick="allTeacher()"><i class="fa-solid fa-right-long"></i> Teacher
-                                    Details</a></li>
-                            <li><a href="/TBSA/admin-dashboard/add-teacher"><i class="fa-solid fa-right-long"></i> Add
-                                    Teacher </a></li>
-                        </ul>
-                    </li>
-
-
-
-                    <li class="has-submenu">
-                        <a href="#">
-                            <i class="fa-solid fa-chalkboard-user"></i>
-                            <div class="title">Academics </div>
-                            <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </a>
-
-                        <ul class="submenu">
-
-
-                            <li><a href="#" onclick="allAcademicYear()"><i class="fa-solid fa-right-long"></i> Academic
-                                    Year
-                                </a></li>
-
-                            <li><a href="#" onclick="allCourse()"><i class="fa-solid fa-right-long"></i> Classes
-                                </a></li>
-                            <li><a href="#" onclick="allSubject()"><i class="fa-solid fa-right-long"></i>
-                                    Subjects </a></li>
-
-
-                        </ul>
-
-                    </li>
-
-
-               
-                   
-                    
-                    <li>
-                        <a href="/logout">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            <div class="title">Logout</div>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-        <main class="content">
-            <header>
-                <div class="header-wrapper">
-                    <div class="header-left">
-                        <div class="toggle-icon">
-                            <i class="fas fa-bars"></i>
                         </div>
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search...">
                     </div>
-                    <div class="header-right">
-                        <div class="star-container">
-                            <div class="star-left">
-                                <i class="far fa-star"></i>
-                                <span>star</span>
-                            </div>
-                            <div class="star-right">
-                                327
+
+                    <div class="box stats-box secondary fade-in" style="animation-delay: 0.2s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value">342 <span class="trend-indicator trend-up"><i
+                                        class="fas fa-arrow-up"></i> 5.2%</span></h4>
+                            <span class="stats-label">Active Projects</span>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                    </div>
+
+                    <div class="box stats-box warning fade-in" style="animation-delay: 0.3s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value">
+                                <%=totalDonation%>
+                            </h4>
+                            <span class="stats-label">Total Donation Amount</span>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+
+                    <div class="box stats-box danger fade-in" style="animation-delay: 0.4s;">
+                        <div class="stats-details">
+                            <h4 class="stats-value">87 <span class="trend-indicator trend-neutral">0%</span></h4>
+                            <span class="stats-label">Pending Tasks</span>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                    </div>
+
+                    <div class="data-table-section fade-in" style="animation-delay: 0.6s;">
+                        <div class="section-header">
+                            <h3 class="section-title">Enquiry List </h3>
+                            <div class="section-actions">
+                                <a href="#" class="box-action-btn" title="Add New" style='text-decoration : none'>
+                                    <i class="fas fa-plus"></i>
+                                </a>
+
+                                <a href="#" class="box-action-btn" title="Export in excel"
+                                    style='text-decoration : none'>
+                                    <i class="fas fa-file-export"></i>
+                                </a>
+
+                                <a href="#" class="box-action-btn" title="PDF" style='text-decoration : none'>
+                                    <i class="fas fa-file-export"></i>
+                                </a>
+
+
                             </div>
                         </div>
-                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAoQMBIgACEQEDEQH/xAAbAAEAAQUBAAAAAAAAAAAAAAAABgIDBAUHAf/EADgQAAICAQICBgYJBAMAAAAAAAABAgMEBREhMQYSQVFhcRMiI4GR0RQyQlJyobHB8DNTYuE1RHP/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAgH/xAAWEQEBAQAAAAAAAAAAAAAAAAAAARH/2gAMAwEAAhEDEQA/AO4gAAAAB42kt3w2MHVNVx9Nh7R9a1reNUeb+SIdqWrZeoNq2bhV2VR4L394EnzukeDjNxrbvmvucl7zSZPSbOt4UxrpXgus/i/kaQAZNuoZtzbsy7n4ddpGO5Sk/WbfmzwAE2uKezMirOy6X7LJuj5TZjgDcY3STPp2VsoXx/zjs/ijdYPSbEvahkRljyfa+MfiQ0AdNhONkFOuSlF8VKL3TKjnWBqOVgTUsexqP2oPjGXmiYaRrePqKUH7K/trk+fk+0Dag8R6AAAAAAAAAfI0uu61HAj6GnaeRJcnyh4v5GRrmpx03F3js77N1XH9/JEEssnbZKyyTlOT3lJ82wFttl1krLZuc5Pdyb4spAAAAAAXK8e63+nTZJd8YtgWwXbMXIrW9lFkUu1wZZT3A9AAAJuLUotqS5NPZoACXaBrv0lxxcySV3KFj4Kfh5khOYfHhy2Jp0c1b6dV6C975Na5/fj3+YG7AAAAACi6yNNcrLJdWEIuUn3JFZHul2a68avEg9pW8Z/hX+/0Ajep5s9QzJ3zeyfCEe6PYYoAAAAC9iY1uXeqaI9aT+CXeyyTXRMBYOHHdL01i3sf7e4Mq3gaHi4kU7Yxvt7ZTXBPwRtFwWy5ABIYGfpGJmRbcFXZ2Tgtn7+8zwBBNQwLsC70dyWz4xmuUkYpPNRw4Z2NKmfPnCX3X2EEnB1zlXNbSi9pLuYVHgADQu4uRZi5EL6XtOD3Xj4FoAdHwcqGZjV5FX1ZrfZ9nejIIp0OzXG23Dm+EvXh59qJWAAABkA1/I+larfLfeMX1I+CXD9dyd5FipostfKEXL4I5o25PrS+s+LfiAAAAAAZek0q/UseuS3i5pteXEnRCdCl1NVx2+2TXxRNgmgADAAACHdJKlXqtkktlZFS9/8AETEiXSmXW1JLtjWk/wAw2NOAAoAAF/AveLm03p7dSab8u38tzo8WnFNcUzmJ0LRbnfpOLY+brSfmuH7AZoAAwdbl1NIymv7bRz06Br630bK/B+5AOwAAAAAAqqnKq2FkPrwkpR80T7FyIZWNXfW94zW/kc/NroeqvAsddu7x5vjtxcX3oMqYApqshdWrKpKcHyknumVBIAeNqKcpNJJbtvkgE5RrhKc3tCKbb7kiBZ+Q8rMuvf25bpPsXYbXXtYWSni4rfok/Xn9/wD0aMKgAA0AADtJv0Uk3o8E/szkl8SEE16Jf8Qv/SQG6B4egYuqVu3TcqCW7dUtvPY50nujpz4rZnN82h42XdQ+cJte7sAsgAAAAAH6GZg6XmZuzpq2h/cnwiBbxM3Iw5b41so7viuafmjbVdJ71/Wxq5PtcW18zIxujNUUnk5EpPtVaSXxZmQ0HTY86HP8VkvmEtZZ0nt29niwi/8AKTZq8zUsvN4ZFr6m/wBSPCPwJRLQtNn/ANfbyskv3MS/ozjyTdF1lb7p+sgIuDYZujZmJvKUFZX9+vj+Rr/1CgAAAAAJ30ar9HouP3y3l8WyCxi5SUY/Wb2XmdIxKVj4tNK5VwUfggLwAAEN6XYnos+OSl6t8eP4lw/TYmRga1hLPwLKkl6RetXv95fzYDn4GzTaaaa5p9gABRcmoxi5N8ElzbHvJV0e0tUVxy74+2mt4Rf2F8wKNJ0CFXVuzkp2c1XzUfPvZvktlwWwAQAAAAABqNW0OrLjKzHSrv8ADlP5G3AHPbap02Srtg4Ti9mmUEy1zS451HXqW2RD6v8Aku5kNa2bTT3T2CtAAGtp0cxPpWqV7reFXtJe7l+ZO0afozgPDwFZYvbX+tLwXYv53m4AAAAAAIj0q0z0Vv02iPs5/wBVL7L7/eR46ZbXC2uULEpQktmn2og2t6TPTbutBdbGm/Ul3eDAp0LC+m58YzW9Vfrz37e5fH9GTQ0/RfHVWnu1r1rZb7+C4L9zcBNAAGAAAAAAAABE+k2EqMpZNa2hdzS7JEsNfr2OsjS7kl60F14+7/W4bEKNv0c0x52UrrI+wqe735SfcYulabbqWQoV8K48Zz7EvmTvExqsSiFNEerCPJBS/sAAAAAAAAW7qa76pVWxUoSWzi+0uADFhjRx6YVUr1IRUUgZJRKtS4rgwyxZBU4SXNcCkJAAAAAAA9jGT5IDw9VXpIuMlvFrZ+JdjWu3iVhUiziYlOHRGnHh1YR/N97L4AaAAAAAAAAAAAAAPDyUU+aAAtygo8tyhgBIuZXGKlz3AArUUipABsegANAAAAAAAAf/2Q=="
-                            alt="avatar">
-                    </div>
-                </div>
-            </header>
-            <section class="main">
-                <div class="box box-1">
-                    <div class="box-left">
-                        <h4>Welcome <%=adminSourse.Name%> !</h4>
-                        <p>Administrator Dashboard for Student Management System </p>
-                        <a href="#">View Account</a>
-                    </div>
-                    <div class="box-right">
-                        <img src="https://png.pngtree.com/png-vector/20220921/ourmid/pngtree-welcome-text-effect-with-colorful-heart-shaped-png-image_6208004.png"
-                            alt="profile">
-                    </div>
-                </div>
-                <div class="box box-2">
-                    <div class="box-details">
-                        <h4>
-                            <%=totalStudent%>
-                        </h4>
-                        <span>Total Students</span>
-                    </div>
-                    <div class="box-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                </div>
-                <div class="box box-3">
-                    <div class="box-details">
-                        <h4>
-                            <%=totalTeachers%>
-                        </h4>
-                        <span>Total Tecahers</span>
-                    </div>
-                    <div class="box-icon">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                    </div>
-                </div>
-            </section>
 
 
-            <section class="containers" id="enquiryContainer">
-                <h3> General Enquiry List </h2>
-                    <div style="border-bottom: 1px solid rgb(19, 160, 66); margin-bottom: 15px;">
 
-                    </div>
-                    <div class="table-container">
-                        <table id="courseTable" class="display responsive nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Sl No </th>
-                                    <th>Name </th>
-                                    <th>Mobile</th>
-                                    <th>Email </th>
-                                    <th>Status </th>
-                                    <th>Message</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <% generalEnquiry.forEach((quiry, index)=>{ %>
-
+                        <div class="table-responsive">
+                            <table id="programsTable" class="table table-striped">
+                                <thead>
                                     <tr>
-
-                                        <td>
-
-                                            <%=index+1%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=quiry.Name%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=quiry.Mobile%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=quiry.Email%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=quiry.Status%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=quiry.Message%>
-                                        </td>
-
-                                        <td>
-
-                                            <a href="javascript:void(0);" role="button"
-                                                onclick="deleteQuiry('<%=quiry._id%>')" class="custom-tooltip">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
-
-                                            <script>
-                                                    const deleteQuiry = (id) => {
-                                                    Swal.fire({
-                                                        title: "Are you sure?",
-                                                        text: "You won't be able to revert this!",
-                                                        icon: "warning",
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: "#3085d6",
-                                                        cancelButtonColor: "#d33",
-                                                        confirmButtonText: "Yes, delete it!"
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            window.location.href = `/delete-general-enquiry/${id}`;
-                                                        }
-                                                    });
-                                                };
-                                            </script>
-
-
-                                            <% if(quiry.Status==='Pending' ) {%>
-
-                                                <a href="/reply-general-quiry/<%=quiry._id%>" role="button"><i
-                                                        class="fa-solid fa-reply"></i></a>
-
-                                                <% }%>
-
-
-                                        </td>
-
+                                        <th>Sl No</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>Email</th>
+                                        <th>Subject</th>
+                                        <th>Message</th>
+                                        <th>Status </th>
+                                        <th>
+                                            Reply
+                                        </th>
+                                        <th>Actions</th>
                                     </tr>
+                                </thead>
+                                <tbody>
 
-                                    <% })%>
+                                    <% allEnquiry.forEach((query, index)=>{ %>
 
-                            </tbody>
-                        </table>
+                                        <tr>
+                                            <td>
+                                                <%=index+1%>
+                                            </td>
+
+                                            <td>
+
+                                                <%=query.Name%>
+                                            </td>
+
+                                            <td>
+
+                                                <%=query.Mobile%>
+                                            </td>
+
+                                            <td>
+
+                                                <%=query.Email%>
+                                            </td>
+
+                                            <td>
+
+                                                <%=query.Subject%>
+                                            </td>
+
+                                            <td>
+
+                                                <%=query.Message%>
+                                            </td>
+
+                                            <td style="Color:<%=query.Status==='Pending' ? 'red' : 'Green' %>">
+
+                                                <%=query.Status%>
+
+                                            </td>
+
+                                            <td>
+
+                                                <% if(query.Status==='Pending' ){%>
+
+
+                                                    <a href="/DPS/admin-dashboard/reply-enquiry/<%=query._id%>"
+                                                        type="button" class="btn btn-primary btn-sm">Reply</a>
+
+                                                    <%} %>
+
+
+                                            </td>
+                                            <td>
+                                                <div class="d-flex gap-1">
+                                                    <a href="" class="action-btn edit" title="Edit"
+                                                        data-toggle="tooltip">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="" class="action-btn delete" title="Delete"
+                                                        data-toggle="tooltip">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+
+
+                                        </tr>
+
+                                        <%}) %>
+
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-            </section>
+
+                </section>
+
+            </main>
 
 
 
+            <div class="data-table-section fade-in" style="animation-delay: 0.6s; margin-top: 20px;">
+                <div class="section-header">
+                    <h3 class="section-title">Refund Request List </h3>
+                    <div class="section-actions">
+                        <a href="#" class="box-action-btn" title="Add New" style='text-decoration : none'>
+                            <i class="fas fa-plus"></i>
+                        </a>
+
+                        <a href="#" class="box-action-btn" title="Export in excel" style='text-decoration : none'>
+                            <i class="fas fa-file-export"></i>
+                        </a>
+
+                        <a href="#" class="box-action-btn" title="PDF" style='text-decoration : none'>
+                            <i class="fas fa-file-export"></i>
+                        </a>
 
 
-            <section class="containers" id="teacherContainer" style="display: none;">
-                <h3> Teacher List </h2>
-
-                    <div style="border-bottom: 1px solid rgb(19, 160, 66); margin-bottom: 15px;"> </div>
+                    </div>
+                </div>
 
 
-                    <a href="/download-teacher-excel"
-                        style="background: #0786B6; color: white; padding: 4px 7px; border-radius: 5px; font-size: 15px; margin-bottom: 20px; display: inline-block;">Download
-                        Excel</a>
+                <div class="table-responsive">
+                    <table id="refundDatatble" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Sl No</th>
+                                <th>Receipt No</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                                <th>P Year</th>
+                                <th>P Month</th>
+                                <th>P Amount</th>
+                                <th>P Date</th>
+                                <th>P Proof</th>
+                                <th>Status </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <% allRefund.forEach((refund, index)=>{ %>
 
 
-                    <div class=" table-container">
-                        <table id="teacherTable" class="display responsive nowrap" style="width:100%">
-                            <thead>
                                 <tr>
-                                    <th>Sl No </th>
-                                    <th>Name </th>
-                                    <th>Mobile</th>
-                                    <th>Email </th>
-                                    <th> Action</th>
-                                    <th> ID Card</th>
-                                    <th> Attendance </th>
+                                    <td>
+                                        <%=index+1%>
+                                    </td>
+
+                                    <td>
+
+                                        <%=refund.Receipt_No%>
+                                    </td>
+
+                                    <td>
+
+                                        <%=refund.Name%>
+                                    </td>
+
+                                    <td>
+
+                                        <%=refund.Mobile%>
+                                    </td>
+
+                                    <td>
+
+                                        <%=refund.Email%>
+                                    </td>
+
+                                    <td>
+
+                                        <%=refund.paymentYear%>
+                                    </td>
+
+                                    <td>
+
+                                        <%=refund.paymentMonth%>
+                                    </td>
 
 
-                                </tr>
-                            </thead>
-                            <tbody>
+                                    <td>
 
-                                <% adminSourse.Teacher.forEach((teacher, index)=>{ %>
+                                        <%=refund.paymentAmount%>
+                                    </td>
 
-                                    <tr>
+                                    <td>
 
-                                        <td>
-                                            <%=index+1%>
-                                        </td>
-
-                                        <td>
-                                            <%=teacher.Name%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=teacher.Mobile%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=teacher.Email%>
-
-                                        </td>
-
-                                        <td>
-
-                                            <a href="#" role="button" onclick="deleteTeacher('<%=teacher._id%>')"><i
-                                                    class="fa-solid fa-trash"></i></a>
-
-                                            <script>
-
-                                                const deleteTeacher = (id) => {
-
-                                                    Swal.fire({
-                                                        title: "Are you sure?",
-                                                        text: "You won't be able to revert this!",
-                                                        icon: "warning",
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: "#3085d6",
-                                                        cancelButtonColor: "#d33",
-                                                        confirmButtonText: "Yes, delete it!"
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            window.location.href = `/delete-teacher/${id}`
-                                                        }
-                                                    });
-
-                                                }
-
-                                            </script>
+                                        <%=refund.paymentDate%>
+                                    </td>
 
 
-                                            <a href="/edit-teacher/<%=teacher._id%>" role="button"><i
-                                                    class="fa-solid fa-user-pen"></i></a>
+                                    <td>
+                                        <a href="/download-refund-payment-proof/<%=refund._id%>"
+                                            class="btn btn-primary btn-sm" href="#" role="button">P Proof</a>
 
 
-                                            <a href="/teacher-profile/<%=teacher._id%>" role="button"><i
-                                                    class="fa-solid fa-eye"></i></a>
+                                    </td>
 
-                                        </td>
+                                    <td
+                                        style="color: <%= refund.Status === 'Refunded' ? 'green' : refund.Status === 'Pending' ? 'black' : 'green' %>;">
 
-                                        <td>
+                                        <%=refund.Status%>
+                                    </td>
 
-                                            <a style="background: #89AB20; color: white; padding: 4px; font-size: 13px; border-radius: 5px;"
-                                                href="/download/teacher-idcard/<%=teacher._id%>" role="button">Generate
-                                                Id
-                                                Card
-                                                </i></a>
-
-                                        </td>
-
-                                        <td>
-                                            <a style="background: #89AB20; color: white; padding: 4px; font-size: 13px; border-radius: 5px;"
-                                                href="/teacher-attendance/<%=teacher._id%>" role="button">Make
-                                                Attendance
-
-                                                </i></a>
-
-                                        </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn" type="button" id="actionMenuButton"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="actionMenuButton">
+                                                <li><a href="/DPS/admin-dashboard/refund/<%=refund._id%>"
+                                                        class="dropdown-item text-success" href="#">Refund</a></li>
+                                                <li><a href="/reject-refund-request/<%=refund._id%>"
+                                                        class="dropdown-item text-danger" href="#">Reject</a></li>
+                                                <li><a href="#" onclick="deleteRefund('<%=refund._id%>')"
+                                                        class="dropdown-item text-warning" href="#">Delete</a></li>
 
 
-                                        <div class="teacheeSection">
+                                                <script>
+
+const deleteRefund = (id) => {
+
+                                                        Swal.fire({
+                                                            title: "Are you sure?",
+                                                            text: "You won't be able to revert this!",
+                                                            icon: "warning",
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: "#3085d6",
+                                                            cancelButtonColor: "#d33",
+                                                            confirmButtonText: "Yes, delete it!"
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+
+                                                                window.location.href = `/delete-refund/${id}`
+                                                            }
+                                                        });
+
+                                                    }
 
 
+                                                </script>
+
+
+
+                                            </ul>
                                         </div>
-                                    </tr>
-
-                                    <%}) %>
-
-                            </tbody>
-                        </table>
-                    </div>
-            </section>
-
-
-
-
-
-
-
-            <section class="containers" id="subjectContainer" style="display: none;">
-                <h3> Subject List </h2>
-
-                    <div style="border-bottom: 1px solid rgb(19, 160, 66); margin-bottom: 15px;"> </div>
-
-
-                    <a href="/TBSA/admin-dashboard/add-subject"
-                        style="background: #0786B6; color: white; padding: 4px 7px; border-radius: 3px; font-size: 15px; margin-bottom: 20px; display: inline-block;">Add
-                        New Subject</a>
-
-
-                    <div class=" table-container">
-                        <table id="subjectTable" class="display responsive nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Sl No </th>
-                                    <th>Subject Name </th>
-                                    <th>Subject Code </th>
-                                    <th>Subject Type </th>
-                                    <th>Action</th>
+                                    </td>
 
                                 </tr>
-                            </thead>
-                            <tbody>
 
-                                <% adminSourse.Subjects.forEach((sub, index)=>{%>
+                        </tbody>
 
-                                    <tr>
-                                        <td>
-                                            <%=index+1%>
-                                        </td>
+                        <% })%>
 
-                                        <td>
-
-                                            <%=sub.subjectName%>
-
-                                        </td>
-
-                                        <td>
-
-                                            <%=sub.subjectCode%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=sub.subjectTeacher%>
-
-                                        </td>
-
-                                        <td>
-                                            <a class="btn btn-primary" href="/edit-subject/<%=sub._id%>"
-                                                role="button"><i class="fa-solid fa-pen-to-square"></i></a>
-
-
-                                            <a class="btn btn-primary" href="#" onclick="deleteSubject('<%=sub._id%>')"
-                                                role="button"><i class="fa-solid fa-trash"></i></a>
-
-                                            <Script>
-
-                                                const deleteSubject = (id) => {
-
-
-                                                    Swal.fire({
-                                                        title: "Are you sure?",
-                                                        text: "You won't be able to revert this!",
-                                                        icon: "warning",
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: "#3085d6",
-                                                        cancelButtonColor: "#d33",
-                                                        confirmButtonText: "Yes, delete it!"
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-
-                                                            window.location.href = `/delete-subject/${id}`
-                                                        }
-                                                    });
-                                                }
-
-                                            </Script>
-
-                                        </td>
-
-                                    </tr>
-
-                                    <% })%>
-                            </tbody>
-                        </table>
-                    </div>
-            </section>
-
-
-
-
-
-
-            <section class="containers" id="classContainer" style="display: none;">
-                <h3> Class List </h2>
-
-                    <div style="border-bottom: 1px solid rgb(19, 160, 66); margin-bottom: 15px;"> </div>
-
-
-                    <a href="/TBSA/admin-dashboard/add-class"
-                        style="background: #0786B6; color: white; padding: 4px 7px; border-radius: 3px; font-size: 15px; margin-bottom: 20px; display: inline-block;">Add
-                        New Class</a>
-
-
-                    <div class=" table-container">
-                        <table id="teacherTable" class="display responsive nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Sl No </th>
-                                    <th>Class </th>
-                                    <th>Teacher </th>
-                                    <th>Registration Fees </th>
-                                    <th>Library Fees </th>
-                                    <th>Tuition Fee</th>
-                                    <th>Transport Fee</th>
-                                    <th>Meal Fee</th>
-                                    <th>Event Fee</th>
-                                    <th>Total Monthly Fees </th>
-
-
-                                    <th>Action </th>
-
-
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <% adminSourse.Course.forEach((cou, index)=>{%>
-
-                                    <tr>
-
-                                        <td>
-                                            <%=index+1%>
-
-                                        </td>
-
-                                        <td>
-                                            <%=cou.className%>
-
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.classTeacher%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.registrationFee%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.libraryFees%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.tuitionFee%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.transportFee%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.mealFee%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.eventFee%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=cou.totalMonthlyFees%>
-                                        </td>
-
-
-                                        <td>
-
-                                            <a class="btn btn-primary" href="/edit-class/<%=cou._id%>" role="button"><i
-                                                    class="fa-solid fa-pen-to-square"></i></a>
-
-
-                                        </td>
-
-                                    </tr>
-
-                                    <%}) %>
-                            </tbody>
-                        </table>
-                    </div>
-            </section>
-
-
-
-
-            <section class="containers" id="academicContainer" style="display: none;">
-                <h3> Academic List </h2>
-
-                    <div style="border-bottom: 1px solid rgb(19, 160, 66); margin-bottom: 15px;"> </div>
-
-
-                    <a href="/TBSA/admin-dashboard/add-academic-year"
-                        style="background: #0786B6; color: white; padding: 4px 7px; border-radius: 3px; font-size: 15px; margin-bottom: 20px; display: inline-block;">Add
-                        New Academic</a>
-
-
-                    <div class=" table-container">
-                        <table id="academicTable" class="display responsive nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Sl No </th>
-                                    <th>Academic Year </th>
-                                    `
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <% adminSourse.Academic_Year.forEach((year, index)=>{%>
-
-                                    <tr>
-                                        <td>
-                                            <%=index+1%>
-                                        </td>
-
-                                        <td>
-                                            <%=year.academicYear%>
-                                        </td>
-                                    </tr>
-
-                                    <% })%>
-
-                            </tbody>
-                        </table>
-                    </div>
-            </section>
-
-
-
-
-
-            <section class="containers" id="studentContainer" style="display: none;">
-                <h3> Student List </h2>
-
-                    <div style="border-bottom: 1px solid rgb(19, 160, 66); margin-bottom: 15px;"> </div>
-
-
-                    <a href="/TBSA/admin-dashboard/add-student"
-                        style="background: #0786B6; color: white; padding: 4px 7px; border-radius: 3px; font-size: 15px; margin-bottom: 20px; display: inline-block;">Add
-                        New Student</a>
-
-
-
-
-                    <div class="filter-container">
-                        <select id="year" class="form-control">
-                            <option value="">Academic Year </option>
-
-                            <% adminSourse.Academic_Year.forEach((year)=>{%>
-
-                                <option value="<%=year.academicYear%>">
-                                    <%=year.academicYear%>
-                                </option>
-
-                                <% })%>
-
-                        </select>
-
-                        <select id="cls" class="form-control">
-                            <option value="">All Class</option>
-
-                            <% adminSourse.Course.forEach((cls)=>{%>
-
-                                <option value="<%=cls.className%>">
-                                    <%=cls.className%>
-                                </option>
-
-                                <%}) %>
-
-                        </select>
-
-                        <button id="studentFilterButton" class="btn btn-filter">Filter</button>
-                    </div>
-
-
-
-                    <div class=" table-container">
-                        <table id="studentTable" class="display responsive nowrap" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Sl No </th>
-                                    <th> Academic year</th>
-                                    <th>Student Name</th>
-                                    <th>Father Name</th>
-                                    <th>Class </th>
-                                    <th>Roll No </th>
-                                    <th>Admission Date </th>
-                                    <th> Verification Status </th>
-                                    <th>Fees</th>
-                                    <th>Action</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-
-
-                                <% Students.forEach((student, index)=>{ %>
-
-                                    <tr data-year="<%=student.academicYear%>" data-course="<%=student.admissionFor%>">
-                                        <td>
-                                            <%=index+1%>
-                                        </td>
-
-                                        <td>
-
-                                            <%=student.academicYear%>
-                                        </td>
-
-                                        <td>
-                                            <%=student.Name%>
-
-                                        </td>
-
-
-                                        <td>
-                                            <%=student.GuardianName%>
-
-                                        </td>
-
-
-
-                                        <td>
-                                            <%=student.admissionFor%>
-
-                                        </td>
-
-                                        <td>
-                                            <%=student.rollNo%>
-
-                                        </td>
-
-                                        <td>
-                                            <%=student.admissionDate%>
-
-                                        </td>
-
-
-                                        <td
-                                            style="color: <%= student.Verification_Status === 'Pending' ? 'red' : 'green' %>;">
-                                            <%= student.Verification_Status %>
-                                        </td>
-
-
-                                        <td>
-                                            <a class="proofButton" href="/fees-collection/<%=student._id%>"
-                                                role="button">Collect Fees </a>
-
-                                        </td>
-
-
-                                        <td>
-                                            <a class="btn btn-primary" href="#" role="button"
-                                                onclick="deleteStudent('<%=student._id%>')"><i
-                                                    class="fa-solid fa-trash"></i></a>
-
-                                            <script>
-
-                                                const deleteStudent = (id) => {
-
-                                                    Swal.fire({
-                                                        title: "Are you sure?",
-                                                        text: "You won't be able to revert this!",
-                                                        icon: "warning",
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: "#3085d6",
-                                                        cancelButtonColor: "#d33",
-                                                        confirmButtonText: "Yes, delete it!"
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-
-                                                            window.location.href = `/delete-student/${id}`
-                                                        }
-                                                    });
-
-                                                }
-
-                                            </script>
-
-
-
-                                            <a class="btn btn-primary" href="/edit-student/<%=student._id%>"
-                                                role="button"><i class="fa-solid fa-pen-to-square"></i></a>
-
-                                            <a class="btn btn-primary" href="/student-profilr/<%=student._id%>"
-                                                role="button"><i class="fa-solid fa-eye"></i></a>
-
-
-                                        </td>
-
-
-                                    </tr>
-
-                                    <% })%>
-
-                            </tbody>
-                        </table>
-                    </div>
-            </section>
-
-
-
-
-
-
-            <footer>
-                <div class="copyright">
-                    copyright &copy; 2022. all right reserved.
                 </div>
-            </footer>
-        </main>
-    </div>
-    <div class="switcher-container">
-        <div class="switcher-icon">
-            <i class="fas fa-cog"></i>
-        </div>
-        <div class="switcher-close">
-            <i class="fas fa-times"></i>
-        </div>
-        <div class="switcher-body">
-            <ul>
-                <li class="active" data-color="#f7f7f7"></li>
-                <li data-color="#212529"></li>
-            </ul>
-        </div>
-    </div>
-    <a href="#top" class="scroll-top">
-        <i class="fas fa-arrow-up"></i>
-    </a>
-    <script src="https://kit.fontawesome.com/9e5ba2e3f5.js" crossorigin="anonymous">
-    </script>
+
+                <button class="scroll-top">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+
+                <script>
+                    $(document).ready(function () {
+                        $('#programsTable, #refundDatatble').DataTable({
+                            responsive: true,
+                            paging: true,
+                            searching: true,
+                            info: true,
+                            autoWidth: false,
+                            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                            dom: '<"top"lf>rt<"bottom"ip>',
+                            language: {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search programs...",
+                                lengthMenu: "Show _MENU_ entries",
+                                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                                infoEmpty: "Showing 0 to 0 of 0 entries",
+                                infoFiltered: "(filtered from _MAX_ total entries)",
+                                paginate: {
+                                    first: "First",
+                                    last: "Last",
+                                    next: "Next",
+                                    previous: "Previous"
+                                }
+                            }
+                        });
+
+                        $(window).scroll(function () {
+                            if ($(this).scrollTop() > 300) {
+                                $('.scroll-top').addClass('active');
+                            } else {
+                                $('.scroll-top').removeClass('active');
+                            }
+                        });
+
+                        $('.scroll-top').click(function () {
+                            $('html, body').animate({ scrollTop: 0 }, 300);
+                            return false;
+                        });
+
+                        $('[data-toggle="tooltip"]').tooltip();
 
 
-</body>
+                    });
 
-<script src="/script/admin_dashboard.js"></script>
+                </script>
+
+
 
 
 </html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%-include('member_common_header' , {member : memberSourse})%>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Refund Request Form</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <style>
+            :root {
+                --primary-color: #4F46E5;
+                --primary-light: #6366F1;
+                --primary-dark: #4338CA;
+                --secondary-color: #10B981;
+                --danger-color: #EF4444;
+                --warning-color: #F59E0B;
+                --info-color: #3B82F6;
+                --light-gray: #F9FAFB;
+                --medium-gray: #E5E7EB;
+                --dark-gray: #6B7280;
+                --text-color: #111827;
+                --border-color: #D1D5DB;
+                --border-radius-sm: 8px;
+                --border-radius-md: 12px;
+                --border-radius-lg: 16px;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                background-color: #f5f7fa;
+                color: var(--text-color);
+                line-height: 1.6;
+            }
+
+            .form-container {
+                max-width: 800px;
+                margin: 2rem auto;
+                background: white;
+                border-radius: var(--border-radius-lg);
+                box-shadow: var(--shadow-lg);
+                overflow: hidden;
+            }
+
+            .form-header {
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+                color: white;
+                padding: 1.5rem 2rem;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .form-header::before {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 200px;
+                height: 200px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+            }
+
+            .form-header h2 {
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                position: relative;
+            }
+
+            .form-header p {
+                opacity: 0.9;
+                margin-bottom: 0;
+                position: relative;
+            }
+
+            .form-body {
+                padding: 2rem;
+            }
+
+            .form-section {
+                margin-bottom: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: var(--primary-dark);
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--medium-gray);
+            }
+
+            .form-label {
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+                color: var(--text-color);
+            }
+
+            .form-control,
+            .form-select {
+                padding: 0.75rem 1rem;
+                border-radius: var(--border-radius-sm);
+                border: 1px solid var(--border-color);
+                transition: all 0.2s ease;
+            }
+
+            .form-control:focus,
+            .form-select:focus {
+                border-color: var(--primary-light);
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .form-control::placeholder {
+                color: var(--dark-gray);
+                opacity: 0.6;
+            }
+
+            .file-upload {
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+                width: 100%;
+            }
+
+            .file-upload-btn {
+                width: 100%;
+                padding: 0.75rem 1rem;
+                border: 2px dashed var(--border-color);
+                border-radius: var(--border-radius-sm);
+                background-color: var(--light-gray);
+                color: var(--dark-gray);
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .file-upload-btn:hover {
+                border-color: var(--primary-light);
+                background-color: rgba(79, 70, 229, 0.05);
+            }
+
+            .file-upload-input {
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+            }
+
+            .file-name {
+                margin-top: 0.5rem;
+                font-size: 0.875rem;
+                color: var(--dark-gray);
+            }
+
+            .btn-primary {
+                background-color: var(--primary-color);
+                border: none;
+                padding: 0.75rem 1.5rem;
+                font-weight: 500;
+                border-radius: var(--border-radius-sm);
+                transition: all 0.2s ease;
+            }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .btn-outline-secondary {
+                border-color: var(--border-color);
+                color: var(--dark-gray);
+                padding: 0.75rem 1.5rem;
+                font-weight: 500;
+                border-radius: var(--border-radius-sm);
+                transition: all 0.2s ease;
+            }
+
+            .btn-outline-secondary:hover {
+                background-color: var(--light-gray);
+                color: var(--text-color);
+            }
+
+            .form-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem 2rem;
+                border-top: 1px solid var(--border-color);
+                background-color: var(--light-gray);
+            }
+
+            .image-preview-container {
+                margin-top: 1rem;
+                display: none;
+            }
+
+            .image-preview {
+                max-width: 200px;
+                max-height: 200px;
+                border-radius: var(--border-radius-sm);
+                border: 1px solid var(--border-color);
+                display: block;
+                margin-top: 0.5rem;
+            }
+
+            .remove-image {
+                color: var(--danger-color);
+                cursor: pointer;
+                font-size: 0.875rem;
+                margin-top: 0.25rem;
+                display: inline-block;
+            }
+
+            .payment-method-toggle {
+                display: flex;
+                margin-bottom: 1rem;
+                border-radius: var(--border-radius-sm);
+                overflow: hidden;
+                border: 1px solid var(--border-color);
+            }
+
+            .payment-method-btn {
+                flex: 1;
+                padding: 0.75rem;
+                text-align: center;
+                background-color: var(--light-gray);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border-right: 1px solid var(--border-color);
+            }
+
+            .payment-method-btn:last-child {
+                border-right: none;
+            }
+
+            .payment-method-btn.active {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+            .payment-method-content {
+                display: none;
+            }
+
+            .payment-method-content.active {
+                display: block;
+            }
+
+            @media (max-width: 768px) {
+                .form-container {
+                    margin: 1rem;
+                    border-radius: var(--border-radius-md);
+                }
+
+                .form-body {
+                    padding: 1.5rem;
+                }
+
+                .form-footer {
+                    flex-direction: column-reverse;
+                    gap: 1rem;
+                    padding: 1.5rem;
+                }
+
+                .form-footer .btn {
+                    width: 100%;
+                }
+
+                .payment-method-toggle {
+                    flex-direction: column;
+                }
+
+                .payment-method-btn {
+                    border-right: none;
+                    border-bottom: 1px solid var(--border-color);
+                }
+
+                .payment-method-btn:last-child {
+                    border-bottom: none;
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .fade-in {
+                animation: fadeIn 0.5s ease-out;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container py-4">
+            <div class="form-container fade-in">
+                <div class="form-header">
+                    <h2><i class="fas fa-money-bill-wave me-2"></i> Refund Request</h2>
+                    <p>Please fill out the form below to request a refund</p>
+                </div>
+
+
+                <script>
+                    <% if (messages.success) { %>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: "<%= messages.success %>",
+                            confirmButtonColor: '#3085d6'
+                        });
+                    <% } %>
+                
+                    <% if (messages.error) { %>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: "<%= messages.error %>",
+                            confirmButtonColor: '#d33'
+                        });
+                    <% } %>
+
+                </script>
+
+                <form class="form-body" id="refundForm" method="post" enctype="multipart/form-data">
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-user-circle me-2"></i>Personal Information</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Enter your full name"
+                                    required value="<%=donationSourse.Name%>" readonly name="Name">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="mobile" class="form-label">Mobile Number</label>
+                                <input type="tel" class="form-control" id="mobile"
+                                    placeholder="Enter your mobile number" required value="<%=donationSourse.Mobile%>"
+                                    readonly name="Mobile">
+                            </div>
+                            <div class="col-12">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email"
+                                    placeholder="Enter your email address" required value="<%=donationSourse.Email%>"
+                                    readonly name="Email">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-credit-card me-2"></i>Payment Information</h3>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="text" class="form-label">Payment Year</label>
+                                <input type="text" class="form-control" id="paymentYear" required
+                                    value="<%=donationSourse.paymentYear%>" readonly name="paymentYear">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="payment-month" class="form-label">Payment Month</label>
+                                <input type="text" class="form-control" id="paymentMonth" required
+                                    value="<%=donationSourse.paymentMonth%>" readonly name="paymentMonth">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="payment-date" class="form-label">Payment Date</label>
+                                <input type="date" class="form-control" id="payment-date" required
+                                    value="<%=donationSourse.paymentDate%>" readonly name="paymentDate">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="payment-amount" class="form-label">Payment Amount</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rs</span>
+                                    <input type="number" class="form-control" id="payment-amount"
+                                        placeholder="Enter amount" step="0.01" required
+                                        value="<%=donationSourse.paymentAmount%>" readonly name="paymentAmount">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="payment-method" class="form-label">Payment Method</label>
+                                <input type="text" class="form-control" required
+                                    value="<%=donationSourse.paymentMethod%>" readonly name="paymentMethod">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="payment-method" class="form-label">Receipt No</label>
+                                <input type="text" class="form-control" required value="<%=donationSourse.Receipt_No%>"
+                                    readonly name="Receipt_No">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-file-upload me-2"></i>Payment Proof</h3>
+                        <div class="mb-3">
+                            <label class="form-label">Upload Payment Proof</label>
+                            <div class="file-upload">
+                                <label class="file-upload-btn">
+                                    <i class="fas fa-cloud-upload-alt me-2"></i>Choose file or drag & drop here
+                                    <input type="file" class="file-upload-input" id="payment-proof"
+                                        accept=".pdf,.jpg,.jpeg,.png" required name="paymentProof">
+                                </label>
+                                <div id="payment-proof-name" class="file-name">No file chosen</div>
+                            </div>
+                            <small class="text-muted">Accepted formats: PDF, JPG, PNG (Max 5MB)</small>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-university me-2"></i>Refund Account Details</h3>
+
+                        <div class="payment-method-toggle mb-3">
+                            <div class="payment-method-btn active" data-target="bank-details">Bank Transfer</div>
+                            <div class="payment-method-btn" data-target="qr-code">UPI</div>
+                        </div>
+
+                        <div id="bank-details" class="payment-method-content active">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="account-holder" class="form-label">Account Holder Name</label>
+                                    <input type="text" class="form-control" id="account-holder"
+                                        placeholder="Name as in bank account" required name="accountHolderName">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="account-number" class="form-label">Account Number</label>
+                                    <input type="nymber" class="form-control" id="account-number"
+                                        placeholder="Enter account number" required name="accountNumber">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="bank-name" class="form-label">Bank Name</label>
+                                    <input type="text" class="form-control" id="bank-name" placeholder="Enter bank name"
+                                        required name="bankName">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="branch" class="form-label">Branch Name</label>
+                                    <input type="text" class="form-control" id="branch" placeholder="Enter branch name"
+                                        required name="branchName">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ifsc" class="form-label">IFSC Code</label>
+                                    <input type="text" class="form-control" id="ifsc" placeholder="Enter IFSC code"
+                                        required name="IFSCcode">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="account-type" class="form-label">Account Type</label>
+                                    <select class="form-select" id="account-type" required name="accountType">
+                                        <option value="" selected disabled>Select account type</option>
+                                        <option value="Savings">Savings</option>
+                                        <option value="Current">Current</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="qr-code" class="payment-method-content">
+                            <div class="mb-3">
+                                <label for="upi-id" class="form-label">UPI ID</label>
+                                <input type="text" class="form-control" id="upi-id" placeholder="Enter your UPI ID"
+                                    name="upiID">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-info-circle me-2"></i>Additional Information</h3>
+                        <div class="mb-3">
+                            <label for="additional-info" class="form-label">Reason for Refund (Optional)</label>
+                            <textarea class="form-control" id="additional-info" rows="3"
+                                placeholder="Please provide any additional information about your refund request"
+                                name="refundReason"></textarea>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="form-footer">
+                    <a href="/DPS/member-dashboard" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back
+                    </a>
+                    <button type="button" class="btn btn-primary" id="submit-btn">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Request
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+                document.getElementById('payment-proof').addEventListener('change', function (e) {
+                    const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+                    document.getElementById('payment-proof-name').textContent = fileName;
+                });
+
+            const paymentMethodBtns = document.querySelectorAll('.payment-method-btn');
+            paymentMethodBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    paymentMethodBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    document.querySelectorAll('.payment-method-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+
+                    const target = this.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const form = document.getElementById('refundForm');
+                const requiredFields = form.querySelectorAll('[required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!field.value) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (isValid) {
+                    form.submit();
+                } else {
+                    alert('Please fill in all required fields.');
+                }
+            });
+
+            document.querySelectorAll('[required]').forEach(field => {
+                field.addEventListener('input', function () {
+                    if (this.value) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('common_header', {admin : adminSourse}) %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Profile | Kevin Smith</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .profile-page {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 20px; 
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .profile-actions {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+            z-index: 20;
+        }
+
+        .action-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .edit-btn {
+            background: white;
+            color: var(--primary);
+        }
+
+        .back-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .profile-section {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.35rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .profile-image-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-image {
+            width: 9rem;
+            height: 9rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .profile-image:hover {
+            border-color: white;
+            transform: scale(1.05);
+        }
+
+        .profile-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .profile-title {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .profile-location {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .profile-location i {
+            margin-right: 0.5rem;
+        }
+
+        .contact-section {
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 3rem;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: var(--gray);
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: var(--light-gray);
+        }
+
+        .contact-icon {
+            width: 3rem;
+            height: 3rem;
+            min-width: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.25rem;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover .contact-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .contact-value {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .contact-value a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            display: inline-block;
+        }
+
+        .contact-value a:hover {
+            color: var(--primary);
+        }
+
+     
+
+        
+        @media (max-width: 992px) {
+            .profile-card {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-section {
+                padding: 2.5rem 2rem;
+            }
+            
+            .contact-section {
+                padding: 2.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .profile-container {
+                padding: 1rem;
+            }
+            
+            .profile-actions {
+                top: 1rem;
+                right: 1rem;
+            }
+            
+            .profile-badge {
+                top: 1rem;
+                left: 1rem;
+            }
+            
+            .profile-image {
+                width: 7rem;
+                height: 7rem;
+            }
+            
+            .contact-section {
+                padding: 1.5rem;
+            }
+            
+            .contact-item {
+                padding: 0.75rem;
+            }
+            
+            .contact-icon {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1rem;
+                margin-right: 1rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="profile-page">
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="profile-actions">
+                    <button class="action-btn back-btn" title="Go Back">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="action-btn edit-btn" title="Edit Profile">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+
+                <div class="profile-section">
+                    <div class="profile-badge"> Member</div>
+                    <div class="profile-image-container">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Kevin Smith" class="profile-image">
+                    </div>
+                    <h1 class="profile-name">Kevin Smith</h1>
+                    <div class="profile-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Saint-Petersburg, Russia
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Contact Information</h2>
+                        <p class="section-subtitle">Available Monday to Friday, 9AM-5PM</p>
+                    </div>
+
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-user-tag"></i>
+                            </div>
+                            <div class="contact-details">
+                                <div class="contact-label">Username</div>
+                                <div class="contact-value">kevin.smith</div>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <div class="contact-label">Office Phone</div>
+                                <div class="contact-value">
+                                    <a href="tel:+79110018880">+7 911 001 8880</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <div class="contact-label">Mobile Phone</div>
+                                <div class="contact-value">
+                                    <a href="tel:+74967141177">+7 496 714 1177</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <div class="contact-label">Email Address</div>
+                                <div class="contact-value">
+                                    <a href="mailto:kevin.smith@stripe.com">kevin.smith@stripe.com</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          
+
+          
+
+            const contactItems = document.querySelectorAll('.contact-item');
+            contactItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.querySelector('.contact-icon').style.transform = 'rotate(10deg) scale(1.1)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.querySelector('.contact-icon').style.transform = 'rotate(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<%-include('common_header', {admin : adminSourse})%>
+
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Admin Dashboard | Member Profile & Academic Year Management</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+
+            :root {
+                --primaryColor: #4F46E5;
+                --primaryLight: #6366F1;
+                --primaryLighter: #818CF8;
+                --primaryDark: #4338CA;
+                --secondaryColor: #10B981;
+                --dangerColor: #EF4444;
+                --warningColor: #F59E0B;
+                --infoColor: #3B82F6;
+                --whiteColor: #FFFFFF;
+                --lightGray: #F9FAFB;
+                --mediumGray: #E5E7EB;
+                --darkGray: #6B7280;
+                --textColor: #111827;
+                --borderColor: #D1D5DB;
+                --smallBorder: 8px;
+                --mediumBorder: 12px;
+                --bigBorder: 16px;
+                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --fs13: 0.8125rem;
+                --fs14: 0.875rem;
+                --fs15: 0.9375rem;
+                --fs16: 1rem;
+                --fs18: 1.125rem;
+                --fs20: 1.25rem;
+                --fs24: 1.5rem;
+                --fs30: 1.875rem;
+                --fs36: 2.25rem;
+                --sidebarWidth: 280px;
+                --headerHeight: 70px;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                position: relative;
+                color: var(--textColor);
+                background-color: var(--lightGray);
+                min-height: 100vh;
+                overflow-x: hidden;
+                line-height: 1.5;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                line-height: 1.3;
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background-color: var(--lightGray);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background-color: var(--primaryLight);
+                border-radius: 3px;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 1600px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+
+            /* Main Layout */
+            .main-content {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                gap: 2rem;
+            }
+
+            @media (max-width: 1200px) {
+                .main-content {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Member Profile Section */
+            .member-profile-section {
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                padding: 2rem;
+                height: fit-content;
+            }
+
+            .member-profile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
+                border-bottom: 1px solid var(--borderColor);
+            }
+
+            .member-profile-title {
+                font-size: var(--fs20);
+                font-weight: 600;
+            }
+
+            .back-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 1rem;
+                background-color: var(--lightGray);
+                color: var(--darkGray);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+
+            .back-btn:hover {
+                background-color: var(--mediumGray);
+                color: var(--textColor);
+                text-decoration: none;
+            }
+
+            .member-profile-content {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                margin-top: -20px;
+            }
+
+            .member-identity {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+
+
+            .member-name {
+                font-size: var(--fs24);
+                font-weight: 600;
+                color: var(--textColor);
+                margin-bottom: 0.25rem;
+            }
+
+            .member-id {
+                font-size: var(--fs14);
+                color: var(--darkGray);
+            }
+
+            .member-details {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+                margin-top: -30px;
+            }
+
+            .detail-item {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .detail-label {
+                font-size: var(--fs14);
+                color: var(--primaryDark);
+                margin-bottom: 0.25rem;
+                font-weight: 600;
+            }
+
+            .detail-value {
+                font-size: var(--fs16);
+                font-weight: 500;
+                padding: 0.75rem 1rem;
+                background-color: var(--lightGray);
+                border-radius: var(--smallBorder);
+            }
+
+            /* Data Table Section */
+            .data-table-section {
+                background-color: var(--whiteColor);
+                border-radius: var(--mediumBorder);
+                box-shadow: var(--shadow);
+                padding: 2rem;
+                overflow: hidden;
+            }
+
+            .data-table-section .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .data-table-section .section-title {
+                font-size: var(--fs20);
+                font-weight: 600;
+                color: var(--textColor);
+            }
+
+            .data-table-section .section-actions {
+                display: flex;
+                gap: 0.75rem;
+            }
+
+            .export-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.65rem 1.25rem;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                border: none;
+                transition: all 0.2s ease;
+            }
+
+            .export-btn.excel {
+                background-color: #1d6f42;
+                color: white;
+            }
+
+            .export-btn.excel:hover {
+                background-color: #165a34;
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .export-btn.pdf {
+                background-color: #d32f2f;
+                color: white;
+            }
+
+            .export-btn.pdf:hover {
+                background-color: #b71c1c;
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: var(--fs15);
+            }
+
+            .table th {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+                padding: 1rem 1.5rem;
+                text-align: left;
+                font-weight: 500;
+                text-transform: uppercase;
+                font-size: var(--fs14);
+                letter-spacing: 0.5px;
+            }
+
+            .table td {
+                padding: 1rem 1.5rem;
+                border-bottom: 1px solid var(--borderColor);
+                vertical-align: middle;
+                color: var(--textColor);
+            }
+
+            .table tr:nth-child(even) {
+                background-color: var(--lightGray);
+            }
+
+            .table tr:hover {
+                background-color: rgba(79, 70, 229, 0.03);
+            }
+
+            .status-badge {
+                display: inline-block;
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                font-size: var(--fs13);
+                font-weight: 500;
+            }
+
+            .status-active {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: var(--secondaryColor);
+            }
+
+            .status-inactive {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: var(--dangerColor);
+            }
+
+            /* Action buttons */
+            .action-btn {
+                width: 34px;
+                height: 34px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--smallBorder);
+                color: var(--darkGray);
+                transition: all 0.2s ease;
+                cursor: pointer;
+                border: none;
+                background: transparent;
+            }
+
+            .action-btn:hover {
+                background-color: var(--lightGray);
+                color: var(--textColor);
+            }
+
+            .action-btn.edit {
+                color: var(--infoColor);
+            }
+
+            .action-btn.delete {
+                color: var(--dangerColor);
+            }
+
+            /* DataTables Customization */
+            .dataTables_wrapper {
+                width: 100%;
+            }
+
+            .dataTables_wrapper .dataTables_filter {
+                margin-bottom: 1.5rem;
+            }
+
+            .dataTables_wrapper .dataTables_filter input {
+                padding: 0.75rem 1rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                margin-left: 0.75rem;
+                font-size: var(--fs14);
+                transition: all 0.2s ease;
+            }
+
+            .dataTables_wrapper .dataTables_filter input:focus {
+                border-color: var(--primaryLight);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                padding: 0.5rem 1.75rem 0.5rem 0.75rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+            }
+
+            .dataTables_wrapper .dataTables_paginate {
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                flex-wrap: nowrap;
+                border-top: 1px solid var(--borderColor);
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+                min-width: 36px;
+                height: 36px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 0.75rem;
+                border-radius: var(--smallBorder);
+                border: 1px solid var(--borderColor);
+                color: var(--textColor);
+                font-size: var(--fs14);
+                font-weight: 500;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                background-color: var(--lightGray);
+                border-color: var(--mediumGray);
+                color: var(--primaryColor);
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background-color: var(--primaryColor);
+                border-color: var(--primaryColor);
+                color: var(--whiteColor);
+                font-weight: 600;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+
+            .dataTables_wrapper .dataTables_info {
+                font-size: var(--fs14);
+                color: var(--darkGray);
+                padding-top: 1.5rem;
+            }
+
+            /* Tooltip */
+            .tooltip-inner {
+                font-size: var(--fs13);
+                padding: 0.5rem 0.75rem;
+                background-color: var(--textColor);
+            }
+
+            .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+            .bs-tooltip-top .tooltip-arrow::before {
+                border-top-color: var(--textColor);
+            }
+
+            /* Animation Classes */
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 991.98px) {
+                .main-content {
+                    grid-template-columns: 1fr;
+                }
+
+                .member-profile-section {
+                    margin-bottom: 2rem;
+                }
+            }
+
+            @media (max-width: 767.98px) {
+                .container {
+                    padding: 1.5rem;
+                }
+
+                .member-profile-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 1rem;
+                    text-align: left;
+                }
+
+                .data-table-section .section-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 1rem;
+                }
+
+                .section-actions {
+                    width: 100%;
+                    justify-content: flex-end;
+                }
+
+                .table th,
+                .table td {
+                    padding: 0.75rem;
+                }
+            }
+
+            @media (max-width: 575.98px) {
+                html {
+                    font-size: 14px;
+                }
+
+                .container {
+                    padding: 1rem;
+                }
+
+                .member-identity {
+                    display: grid;
+                    grid-template-columns: 100px 1fr;
+                    gap: 1rem;
+                    align-items: center;
+                }
+
+                .member-name {
+                    font-size: var(--fs20);
+                    margin-bottom: 0.5rem;
+                }
+
+                .member-id {
+                    font-size: var(--fs13);
+                }
+
+                .dataTables_wrapper .dataTables_paginate {
+                    gap: 0.25rem;
+                }
+
+                .dataTables_wrapper .dataTables_paginate .paginate_button {
+                    min-width: 30px;
+                    height: 30px;
+                    font-size: var(--fs13);
+                    padding: 0 0.5rem;
+                }
+
+                .export-btn {
+                    padding: 0.5rem 1rem;
+                    font-size: var(--fs13);
+                }
+
+                .member-details {
+                    grid-template-columns: 1fr;
+                }
+
+                .detail-label {
+                    color: var(--primaryColor);
+                    font-weight: 600;
+                }
+
+                .detail-value {
+                    padding: 0.5rem 1rem;
+                }
+            }
+
+
+
+            .filter-controls {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background-color: var(--lightGray);
+                border-radius: var(--smallBorder);
+            }
+
+            .filter-group {
+                display: flex;
+                flex-direction: column;
+                min-width: 200px;
+                flex-grow: 1;
+            }
+
+            .filter-label {
+                font-size: var(--fs13);
+                font-weight: 500;
+                color: var(--darkGray);
+                margin-bottom: 0.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .filter-select {
+                padding: 0.625rem 1rem;
+                border: 1px solid var(--borderColor);
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                color: var(--textColor);
+                background-color: var(--whiteColor);
+                transition: all 0.2s ease;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 0.75rem center;
+                background-size: 1rem;
+            }
+
+            .filter-select:focus {
+                outline: none;
+                border-color: var(--primaryLight);
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            }
+
+            .filter-actions {
+                display: flex;
+                align-items: flex-end;
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.625rem 1.25rem;
+                border-radius: var(--smallBorder);
+                font-size: var(--fs14);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .filter-btn.apply {
+                background-color: var(--primaryColor);
+                color: var(--whiteColor);
+            }
+
+            .filter-btn.apply:hover {
+                background-color: var(--primaryDark);
+            }
+
+            .filter-btn.reset {
+                background-color: var(--lightGray);
+                color: var(--darkGray);
+            }
+
+            .filter-btn.reset:hover {
+                background-color: var(--mediumGray);
+            }
+        </style>
+    </head>
+
+
+
+    <body>
+        <div class="container" id="top">
+            <main class="content">
+                <div class="main-content">
+                    <!-- Member Profile Section -->
+                    <section class="member-profile-section fade-in">
+                        <div class="member-profile-header">
+                            <h3 class="member-profile-title">Member Profile</h3>
+                            <a href="/DPS/all-member" class="back-btn">
+                                <i class="fas fa-arrow-left"></i> Back to Members
+                            </a>
+                        </div>
+
+                        <div class="member-profile-content">
+                            <div class="member-identity">
+
+                                <div>
+                                    <h2 class="member-name">
+                                        <%=memberSourse.Name%>
+                                    </h2>
+                                    <div class="member-id">Member ID: MEM2023001</div>
+                                </div>
+                            </div>
+
+                            <div class="member-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Mobile : </span>
+                                    <%=memberSourse.Mobile%>
+
+                                </div>
+
+                                <div class="detail-item">
+                                    <span class="detail-label">Email : </span>
+                                    <%=memberSourse.Email%>
+                                </div>
+
+                                <div class="detail-item">
+                                    <span class="detail-label">Address : </span>
+                                    <%=memberSourse.Assress%>
+
+                                </div>
+
+                                <div class="detail-item">
+                                    <span class="detail-label">Joining Date : </span>
+                                    <%=memberSourse.joiningDate%>
+                                </div>
+
+                                <div class="detail-item">
+                                    <span class="detail-label">Passing Year : </span>
+                                    <%=memberSourse.passingYear%>
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Data Table Section -->
+                    <section class="data-table-section fade-in" style="animation-delay: 0.2s;">
+                        <div class="section-header">
+                            <h3 class="section-title">Donation Records </h3>
+                            <div class="section-actions">
+                                <a href="/donation-record-excel/<%=memberSourse._id%>" class="export-btn excel">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </a>
+                                <a href="/donation-record/<%=memberSourse._id%>" class="export-btn pdf">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <div class="filter-controls">
+
+                            <div class="filter-group">
+                                <label class="filter-label">Financial Year</label>
+                                <select class="filter-select" id="financialYear">
+                                    <option value="">All Financial Year</option>
+
+                                    <% allFinancialYear.forEach((year)=>{ %>
+
+                                        <option value="<%=year.Year%>">
+                                            <%=year.Year%>
+                                        </option>
+
+                                        <% })%>
+
+                                </select>
+                            </div>
+                            <div class="filter-actions">
+                                <button class="filter-btn apply" id="filterButton">
+                                    <i class="fas fa-filter"></i> Apply
+                                </button>
+
+                            </div>
+                        </div>
+
+
+                        <div class="table-responsive">
+                            <table id="academicYearTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Receipt ID</th>
+                                        <th>Year</th>
+                                        <th>Month</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <% memberSourse.Donation.forEach((donate)=>{ %>
+
+
+                                        <tr data-year="<%=donate.paymentYear%>">
+                                            <td>
+                                                <%=donate.Receipt_No%>
+                                            </td>
+
+                                            <td>
+                                                <%=donate.paymentYear%>
+                                            </td>
+
+                                            <td>
+
+                                                <%=donate.paymentMonth%>
+                                            </td>
+
+                                            <td>
+
+                                                <%=donate.paymentAmount%>
+                                            </td>
+
+                                            <td>
+                                                <a href="/edit-donation/<%=donate._id%>" role="button"><i
+                                                        class="fa-solid fa-pen-to-square"></i></a>
+
+                                                <a href="#" role="button" onclick="deleteDonate('<%=donate._id%>')"><i
+                                                        class="fa-solid fa-trash"></i></a>
+
+                                                <script>
+
+                                                    const deleteDonate = (id) => {
+
+                                                        Swal.fire({
+                                                            title: "Are you sure?",
+                                                            text: "You won't be able to revert this!",
+                                                            icon: "warning",
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: "#3085d6",
+                                                            cancelButtonColor: "#d33",
+                                                            confirmButtonText: "Yes, delete it!"
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+
+                                                                window.location.href = `/delete-donate/${id}`
+                                                            }
+                                                        });
+
+                                                    }
+
+                                                </script>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <%}) %>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                // Initialize DataTable
+                const academicYearTable = $('#academicYearTable').DataTable({
+                    responsive: true,
+                    paging: true,
+                    searching: true,
+                    info: true,
+                    autoWidth: false,
+                    lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    dom: '<"top"lf>rt<"bottom"ip>',
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search academic years...",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoEmpty: "Showing 0 to 0 of 0 entries",
+                        infoFiltered: "(filtered from _MAX_ total entries)",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "Next",
+                            previous: "Previous"
+                        }
+                    }
+                });
+
+                // Initialize tooltips
+                $('[data-toggle="tooltip"]').tooltip();
+
+
+
+                $('#filterButton').on('click', () => {
+
+                    let selectedYear = $('#financialYear').val();
+
+                    $('#academicYearTable tbody tr').each(function () {
+
+                        $(this).toggle(selectedYear === "" || $(this).attr("data-year") === selectedYear);
+
+                    })
+                })
+
+            });
+        </script>
+    </body>
+
+</html>

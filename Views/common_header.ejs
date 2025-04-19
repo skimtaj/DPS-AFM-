@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Admin Header</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .header-component,
+        .header-component * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header-component {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .header-component .header-logo {
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+            color: white;
+            text-decoration: none !important;
+            letter-spacing: 0.5px;
+        }
+
+        .header-component .header-logo i {
+            margin-right: 10px;
+            color: #3498db;
+            font-size: 20px;
+        }
+
+        .header-component .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-component .nav-item {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .header-component .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none !important;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .header-component .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .header-component .nav-link i {
+            margin-left: 5px;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .header-component .nav-link.active {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .header-component .admin-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .header-component .admin-image {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .header-component .admin-image:hover {
+            border-color: rgba(255, 255, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        .header-component .admin-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background-color: white;
+            width: 280px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: 1px solid #e0e0e0;
+        }
+
+        .header-component .admin-profile:hover .admin-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .header-component .admin-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+
+        .header-component .admin-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid #3498db;
+        }
+
+        .header-component .admin-info h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .header-component .admin-info p {
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+
+        .header-component .admin-links a {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            color: #34495e;
+            text-decoration: none !important;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .header-component .admin-links a:hover {
+            color: #3498db;
+            padding-left: 5px;
+        }
+
+        .header-component .admin-links a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .header-component .admin-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .header-component .logout-btn {
+            background-color: #f8f9fa;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .header-component .logout-btn:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .header-component .submenu {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background-color: white;
+            width: 220px;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: 1px solid #e0e0e0;
+        }
+
+        .header-component .nav-item:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .header-component .nav-item:hover .nav-link i {
+            transform: rotate(180deg);
+        }
+
+        .header-component .submenu-item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .header-component .submenu-item:last-child {
+            border-bottom: none;
+        }
+
+        .header-component .submenu-link {
+            color: #555;
+            text-decoration: none !important;
+            padding: 12px 20px;
+            display: block;
+            transition: all 0.2s ease;
+            font-size: 13px;
+        }
+
+        .header-component .submenu-link:hover {
+            background-color: #f8f9fa;
+            color: #3498db;
+            padding-left: 25px;
+        }
+
+        .header-component .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: transform 0.3s ease;
+            padding: 10px;
+        }
+
+        .header-component .mobile-menu-btn.active {
+            transform: rotate(90deg);
+        }
+
+        .header-component .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .header-component .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 992px) {
+            .header-component .mobile-menu-btn {
+                display: block;
+            }
+
+            .header-component .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 85%;
+                max-width: 350px;
+                height: 100vh;
+                background: #2c3e50;
+                flex-direction: column;
+                padding: 80px 30px 30px;
+                transition: all 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+            }
+
+            .header-component .nav-menu.active {
+                right: 0;
+            }
+
+            .header-component .nav-item {
+                margin: 0 0 15px 0;
+                width: 100%;
+            }
+
+            .header-component .nav-link {
+                color: rgba(255, 255, 255, 0.9);
+                padding: 15px;
+                border-radius: 6px;
+                justify-content: space-between;
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            .header-component .nav-link.active {
+                background-color: rgba(52, 152, 219, 0.3);
+            }
+
+            .header-component .nav-link i {
+                font-size: 14px;
+                transition: transform 0.3s ease;
+            }
+
+            .header-component .nav-link.active i {
+                transform: rotate(180deg);
+            }
+
+            .header-component .admin-profile {
+                margin-left: 0;
+                margin-top: 20px;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .header-component .admin-dropdown {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                margin-top: 15px;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                padding: 15px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                background-color: #34495e;
+            }
+
+            .header-component .admin-profile.active .admin-dropdown {
+                display: block;
+            }
+
+            .header-component .admin-header {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .header-component .admin-info h4 {
+                color: white;
+            }
+
+            .header-component .admin-info p {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .header-component .admin-links a {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .header-component .admin-links a:hover {
+                color: #3498db;
+            }
+
+            .header-component .admin-links a i {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .header-component .admin-footer {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .header-component .submenu {
+                position: static;
+                width: 100%;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background-color: #34495e;
+                border-radius: 0;
+                margin-top: 10px;
+                padding-left: 15px;
+                border-left: 3px solid #3498db;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease, padding 0.3s ease;
+            }
+
+            .header-component .submenu.active {
+                display: block;
+                max-height: 500px;
+                padding: 10px 0;
+            }
+
+            .header-component .submenu-item {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .header-component .submenu-link {
+                color: rgba(255, 255, 255, 0.8);
+                padding: 12px 15px;
+            }
+
+            .header-component .submenu-link.active {
+                color: #3498db;
+                font-weight: 500;
+            }
+
+            .header-component .submenu-link:hover {
+                color: #3498db;
+                background-color: transparent;
+                padding-left: 15px;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            .header-component .nav-item {
+                opacity: 0;
+                animation: fadeIn 0.3s ease forwards;
+            }
+
+            .header-component .nav-menu.active .nav-item:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+
+            .header-component .nav-menu.active .nav-item:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            .header-component .nav-menu.active .nav-item:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+
+            .header-component .nav-menu.active .nav-item:nth-child(4) {
+                animation-delay: 0.4s;
+            }
+
+            .header-component .nav-menu.active .nav-item:nth-child(5) {
+                animation-delay: 0.5s;
+            }
+
+            .header-component .nav-menu.active .nav-item:nth-child(6) {
+                animation-delay: 0.6s;
+            }
+
+            .header-component .nav-menu.active .nav-item:nth-child(7) {
+                animation-delay: 0.7s;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-component .header-container {
+                padding: 0 15px;
+            }
+
+            .header-component .header-logo {
+                font-size: 20px;
+            }
+
+            .header-component .header-logo i {
+                margin-right: 8px;
+                font-size: 18px;
+            }
+
+            .header-component .mobile-menu-btn {
+                font-size: 20px;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-component .header-container {
+                height: 60px;
+            }
+
+            .header-component .header-logo {
+                font-size: 18px;
+            }
+
+            .header-component .nav-menu {
+                width: 90%;
+                padding: 70px 20px 20px;
+            }
+
+            .header-component .admin-dropdown {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-component">
+        <div class="header-container">
+            <a href="#" class="header-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>AdminPortal</span>
+            </a>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="/DPS/admin-dashboard" class="nav-link">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link mobile-dropdown">
+                        Members
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="/DPS/all-member" class="submenu-link">All Members</a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="/DPS/add-member" class="submenu-link">Add New Member</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link mobile-dropdown">
+                        Academic
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item">
+                            <a href="/DPS/academic-year" class="submenu-link">Academic Year</a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="/DPS/financial-year" class="submenu-link">Financial Year</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/DPS/notice" class="nav-link">Notices</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Settings</a>
+                </li>
+                <li class="nav-item admin-profile" id="adminProfile">
+                    <img src="https://via.placeholder.com/50" alt="Admin" class="admin-image">
+                    <div class="admin-dropdown">
+                        <div class="admin-header">
+                            <img src="https://via.placeholder.com/50" alt="Admin">
+                            <div class="admin-info">
+                                <h4>John Doe</h4>
+                                <p>Administrator</p>
+                            </div>
+                        </div>
+                        <div class="admin-links">
+                            <a href="/DPS/admin-account">
+                                <i class="fas fa-user-cog"></i>
+                                Manage Your Account
+                            </a>
+
+                        </div>
+                        <div class="admin-footer">
+                            <button class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const adminProfile = document.getElementById('adminProfile');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenuOverlay.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            const icon = mobileMenuBtn.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+
+            if (window.innerWidth <= 992) {
+                adminProfile.classList.remove('active');
+            }
+        });
+
+        const mobileDropdowns = document.querySelectorAll('.mobile-dropdown');
+
+        mobileDropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', function (e) {
+                if (window.innerWidth <= 992) {
+                    e.preventDefault();
+                    const submenu = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+
+                    document.querySelectorAll('.submenu').forEach(menu => {
+                        if (menu !== submenu && menu.classList.contains('active')) {
+                            menu.classList.remove('active');
+                            menu.previousElementSibling.classList.remove('active');
+                        }
+                    });
+
+                    adminProfile.classList.remove('active');
+
+                    submenu.classList.toggle('active');
+                    this.classList.toggle('active');
+                }
+            });
+        });
+
+        adminProfile.addEventListener('click', function (e) {
+            if (window.innerWidth <= 992) {
+                e.preventDefault();
+                this.classList.toggle('active');
+
+                document.querySelectorAll('.submenu').forEach(menu => {
+                    menu.classList.remove('active');
+                    menu.previousElementSibling.classList.remove('active');
+                });
+            }
+        });
+
+        const navLinks = document.querySelectorAll('.nav-link:not(.mobile-dropdown)');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    navMenu.classList.remove('active');
+                    mobileMenuOverlay.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 992) {
+                navMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+
+                document.querySelectorAll('.submenu').forEach(menu => {
+                    menu.classList.remove('active');
+                });
+
+                adminProfile.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link, .submenu-link');
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+
+                    if (link.classList.contains('submenu-link')) {
+                        const parentItem = link.closest('.nav-item');
+                        if (parentItem) {
+                            const parentLink = parentItem.querySelector('.nav-link');
+                            if (parentLink) {
+                                parentLink.classList.add('active');
+                            }
+                        }
+                    }
+                }
+            });
+
+            const dropdownParents = document.querySelectorAll('.mobile-dropdown');
+            dropdownParents.forEach(parent => {
+                const submenu = parent.nextElementSibling;
+                if (submenu && submenu.querySelector('.submenu-link.active')) {
+                    parent.classList.add('active');
+                    if (window.innerWidth <= 992) {
+                        submenu.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
