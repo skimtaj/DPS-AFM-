@@ -760,4 +760,53 @@ const deleteNotice = async (req, res) => {
 }
 
 
+const downloadAllmemberExcel = async (req, res) => {
+
+    const membeerSourse = await member_model.find();
+    const workbook = new exceljs.Workbook();
+    const excelSheet = workbook.addWorksheet();
+
+    excelSheet.addRow(['ID Number', 'Name', 'Mobile', 'Email', 'Join Date', 'Passing Year']);
+
+    membeerSourse.forEach((member) => {
+
+        excelSheet.addRow([member.Member_ID, member.Name, member.Mobile, member.Email, member.joiningDate, member.passingYear])
+
+    })
+
+    res.setHeader("Content-Disposition", "attachment; filename=teachers.xlsx");
+    await workbook.xlsx.write(res);
+    res.end();
+
+
+}
+
+
+const downloadAllmemberPDF = async (req, res) => {
+
+    const allMembers = await member_model.find();
+
+    const doc = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=members.pdf');
+    doc.pipe(res);
+
+    doc.fontSize(18).text('All Members List', { align: 'center', underline: true });
+    doc.moveDown();
+
+    doc.fontSize(14).fillColor('#333').text('ID Number   Name         Mobile         Email            Joining Date        Passing Year', { underline: false, align: 'left' });
+    doc.moveDown(0.5);
+
+    allMembers.forEach((member) => {
+
+        doc.fontSize(12).text(`${member.Member_ID}      ${member.Name}     ${member.Mobile}     ${member.Email}    ${member.joiningDate}   ${member.passingYear}  `)
+        doc.moveDown(0.5);
+
+    })
+
+    doc.end();
+
+}
+
+
 module.exports = { deleteNotice, downloadNotice, addNoticePost, adminAccount, addNotice, deleteRefund, rejectRefundRequest, refundDownlodProof, adminRefundPost, adminRefund, downloadPaymentProof, donationRecordpdf, donationRecordExcel, userVerification, editDonation, deleteDonation, deleteFinancialYear, addFinancial, financialYear, memberProfile, newDonationPost, newDonation, editMemberPost, deleteacAdemicYear, academicYearPost, academicYear, newMember, editMember, deleteMember, newMemberPost, allMember, reqplyEnquiryPost, reqplyEnquiry, adminDashboard, adminLoginPost, adminLogin, adminSignup }
