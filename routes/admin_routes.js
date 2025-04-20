@@ -89,6 +89,9 @@ route.get('/DPS/notice', auth, addNotice)
 route.get('/download-notice/:id', downloadNotice);
 route.get('/delete-notice/:id', deleteNotice)
 
+route.get('/download-all-member-excel', downloadAllmemberExcel)
+route.get('/download-all-member-pdf', downloadAllmemberPDF)
+
 
 route.post('/DPS/add-notice', auth, upload.single('attcahFile'), addNoticePost)
 
